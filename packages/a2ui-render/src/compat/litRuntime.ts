@@ -30,7 +30,7 @@ export async function loadLitRuntime(version?: A2UIProtocolVersion): Promise<A2U
 
   const next = (protocolVersion === '0.9'
     ? import('./litCompat09.generated')
-    : import('./litCompat08.generated')) as Promise<A2UILitRuntime>;
+    : import('./litCompat08.generated')) as unknown as Promise<A2UILitRuntime>;
   runtimeCache.set(protocolVersion, next);
   return next;
 }

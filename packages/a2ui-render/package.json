@@ -52,5 +52,5 @@
     "@babel/runtime": "^7.23.9",
     "zod": "^3.25.76"
   },
-  "gitHead": "97d982fe556fbcfab0e08603e7e816f1e26a5910"
+  "gitHead": "2e87d468eeb6ce7076781457d3790be2e3cf656b"
 }
