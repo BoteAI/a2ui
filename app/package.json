@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "a2ui-playground-app",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "lingxi-env --node-compatible umi dev",
+    "build": "lingxi-env --node-compatible umi build"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.3.7",
+    "@boteteam/a2ui-custom-kit": "0.0.1",
+    "@boteteam/a2ui-render": "0.0.1",
+    "@boteteam/theme": "^0.0.42",
+    "antd": "4.24.14",
+    "antd-dayjs-webpack-plugin": "^1.0.6",
+    "react": "17.x",
+    "react-dom": "17.x",
+    "umi": "^3.5.41",
+    "sass-resources-loader": "^2.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@umijs/preset-react": "1.x",
+    "@lingxiteam/env": "^1.0.2",
+    "less": "^4.2.0",
+    "less-loader": "5.0.0",
+    "typescript": "^4.1.2"
+  }
+}

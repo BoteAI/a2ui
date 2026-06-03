@@ -1,0 +1,313 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "beijing-travel-form",
+      "catalogId": "https://a2ui.org/specification/v0_9/basic_catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "beijing-travel-form",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["main-card"],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "main-card",
+          "component": "Card",
+          "child": "card-body"
+        },
+        {
+          "id": "card-body",
+          "component": "Column",
+          "children": [
+            "header-row",
+            "city-date-row",
+            "traveler-count-row",
+            "budget-row",
+            "preferences-row",
+            "submit-col"
+          ],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "header-row",
+          "component": "Row",
+          "children": ["title-col", "cyber-badge"],
+          "justify": "space_between",
+          "align": "start"
+        },
+        {
+          "id": "title-col",
+          "component": "Column",
+          "children": ["title", "subtitle"],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "title",
+          "component": "Text",
+          "text": "北京两日游旅行规划",
+          "variant": "h1"
+        },
+        {
+          "id": "subtitle",
+          "component": "Text",
+          "text": "填写行程偏好，一键生成专属路线",
+          "variant": "body"
+        },
+        {
+          "id": "cyber-badge",
+          "component": "Text",
+          "text": "CYBER",
+          "variant": "caption"
+        },
+        {
+          "id": "city-date-row",
+          "component": "Row",
+          "children": ["departure-city-field", "departure-date-field"],
+          "justify": "start",
+          "align": "start"
+        },
+        {
+          "id": "departure-city-field",
+          "component": "TextField",
+          "label": "出发城市",
+          "value": {
+            "path": "/departureCity"
+          },
+          "variant": "shortText",
+          "checks": [
+            {
+              "condition": {
+                "call": "required",
+                "args": {
+                  "value": {
+                    "path": "/departureCity"
+                  }
+                }
+              },
+              "message": "请输入出发城市"
+            }
+          ]
+        },
+        {
+          "id": "departure-date-field",
+          "component": "DateTimeInput",
+          "label": "出发日期",
+          "value": {
+            "path": "/departureDate"
+          },
+          "enableDate": true,
+          "enableTime": false,
+          "checks": [
+            {
+              "condition": {
+                "call": "required",
+                "args": {
+                  "value": {
+                    "path": "/departureDate"
+                  }
+                }
+              },
+              "message": "请选择出发日期"
+            }
+          ]
+        },
+        {
+          "id": "traveler-count-row",
+          "component": "Row",
+          "children": ["traveler-count-field"],
+          "justify": "start",
+          "align": "start"
+        },
+        {
+          "id": "traveler-count-field",
+          "component": "TextField",
+          "label": "出行人数",
+          "value": {
+            "path": "/travelerCount"
+          },
+          "variant": "number",
+          "checks": [
+            {
+              "condition": {
+                "call": "required",
+                "args": {
+                  "value": {
+                    "path": "/travelerCount"
+                  }
+                }
+              },
+              "message": "请输入出行人数"
+            },
+            {
+              "condition": {
+                "call": "numeric",
+                "args": {
+                  "value": {
+                    "path": "/travelerCount"
+                  },
+                  "min": 1
+                }
+              },
+              "message": "出行人数至少为1"
+            }
+          ]
+        },
+        {
+          "id": "budget-row",
+          "component": "Row",
+          "children": ["budget-field"],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "budget-field",
+          "component": "ChoicePicker",
+          "label": "预算（每晚）",
+          "variant": "mutuallyExclusive",
+          "options": [
+            {
+              "label": "500元以下/晚",
+              "value": "under500"
+            },
+            {
+              "label": "500-1000元/晚",
+              "value": "500-1000"
+            },
+            {
+              "label": "1000-2000元/晚",
+              "value": "1000-2000"
+            },
+            {
+              "label": "2000元以上/晚",
+              "value": "above2000"
+            }
+          ],
+          "value": {
+            "path": "/budget"
+          },
+          "displayStyle": "chips",
+          "checks": [
+            {
+              "condition": {
+                "call": "required",
+                "args": {
+                  "value": {
+                    "path": "/budget"
+                  }
+                }
+              },
+              "message": "请选择预算范围"
+            }
+          ]
+        },
+        {
+          "id": "preferences-row",
+          "component": "Row",
+          "children": ["preferences-field"],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "preferences-field",
+          "component": "ChoicePicker",
+          "label": "旅行偏好",
+          "variant": "multipleSelection",
+          "options": [
+            {
+              "label": "历史文化",
+              "value": "history"
+            },
+            {
+              "label": "美食",
+              "value": "food"
+            },
+            {
+              "label": "自然风光",
+              "value": "nature"
+            },
+            {
+              "label": "购物",
+              "value": "shopping"
+            },
+            {
+              "label": "亲子",
+              "value": "family"
+            }
+          ],
+          "value": {
+            "path": "/preferences"
+          },
+          "displayStyle": "chips"
+        },
+        {
+          "id": "submit-col",
+          "component": "Column",
+          "children": ["submit-button", "submit-hint"],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "submit-button",
+          "component": "Button",
+          "child": "submit-text",
+          "primary": true,
+          "action": {
+            "name": "book_flight",
+            "context": {
+              "departureCity": {
+                "path": "/departureCity"
+              },
+              "departureDate": {
+                "path": "/departureDate"
+              },
+              "travelerCount": {
+                "path": "/travelerCount"
+              },
+              "budget": {
+                "path": "/budget"
+              },
+              "preferences": {
+                "path": "/preferences"
+              }
+            }
+          }
+        },
+        {
+          "id": "submit-text",
+          "component": "Text",
+          "text": "预订机票"
+        },
+        {
+          "id": "submit-hint",
+          "component": "Text",
+          "text": "提交后将为你匹配航班与酒店方案",
+          "variant": "caption"
+        }
+      ]
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "beijing-travel-form",
+      "path": "/",
+      "value": {
+        "departureCity": "北京",
+        "departureDate": "2026-06-01",
+        "travelerCount": 2,
+        "budget": ["500-1000"],
+        "preferences": ["history", "food"]
+      }
+    }
+  }
+]

@@ -1,0 +1,185 @@
+@import (reference) '../../assets/theme/themeMap.less';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+  background: var(--botchat-bg-page, #f5f5f5);
+  overflow: hidden;
+}
+
+.toolbar {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: @component-background;
+  border-radius: @border-radius-base;
+  border: 1px solid @border-color-split;
+}
+
+.previewRemoteBar {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  background: @background-color-light;
+  border: 1px solid @border-color-split;
+  border-radius: @border-radius-base;
+  box-sizing: border-box;
+}
+
+.previewRemoteUrlInput {
+  width: 100%;
+  display: block;
+
+  &:global(.ant-input-textarea),
+  &:global(.ant-input-textarea-show-count) {
+    width: 100%;
+  }
+
+  textarea {
+    width: 100% !important;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+.toolbarTitle {
+  font-size: @font-size-lg;
+  font-weight: @font-weight;
+  color: @heading-color;
+}
+
+.toolbarLabel {
+  font-size: @font-size-sm;
+  color: @text-color-secondary;
+}
+
+/** 占满视口剩余高度，与官方 Playground 左右分栏类似 */
+.playgroundBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainRow {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.mainRow > :global(.ant-col) {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.panelLabel {
+  flex-shrink: 0;
+  margin-bottom: 8px;
+  font-size: @font-size-sm;
+  font-weight: @font-weight;
+  color: @text-color-secondary;
+}
+
+.messageEditorWrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.messageEditor {
+  flex: 1;
+  min-height: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  resize: none;
+}
+
+/** antd TextArea 为原生 textarea，拉满左侧栏剩余高度 */
+.messageEditorWrap textarea {
+  min-height: calc(100vh - 260px) !important;
+  height: 100% !important;
+  resize: vertical;
+}
+
+.messageEditorBanner {
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+.previewPane {
+  flex: 1;
+  min-height: calc(100vh - 260px);
+  overflow: auto;
+  background: @component-background;
+  border: 1px solid @border-color-split;
+  border-radius: @border-radius-base;
+  box-sizing: border-box;
+
+  &:has(.a2ui-renderer-container--theme-cyber) {
+    background: linear-gradient(145deg, #070b18 0%, #12082a 45%, #0b1020 100%);
+    border-color: rgba(0, 229, 255, 0.22);
+  }
+
+  &:has(.a2ui-renderer-container--theme-platform-interconnect) {
+    background: linear-gradient(145deg, #f5f7ff 0%, #ebefff 50%, #e8f4ff 100%);
+    border-color: rgba(15, 137, 252, 0.22);
+  }
+
+  &:has(.a2ui-renderer-container--theme-deep-blue-wisdom) {
+    background: linear-gradient(145deg, #0a1628 0%, #0f2847 45%, #132a4a 100%);
+    border-color: rgba(50, 172, 255, 0.28);
+  }
+}
+
+.rendererWrapper {
+  width: 100%;
+  min-height: 280px;
+  padding: 12px;
+  box-sizing: border-box;
+
+  &:has(.a2ui-renderer-container--theme-cyber),
+  &:has(.a2ui-renderer-container--theme-platform-interconnect),
+  &:has(.a2ui-renderer-container--theme-deep-blue-wisdom) {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 28px 16px;
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .messageEditorWrap textarea {
+    min-height: 320px !important;
+  }
+
+  .previewPane {
+    min-height: 320px;
+  }
+}

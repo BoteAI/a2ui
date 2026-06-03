@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "name": "a2ui",
+  "authors": ["wujian"],
+  "scripts": {
+    "bs": "lerna bootstrap",
+    "watch": "lerna run --parallel dev",
+    "start": "cd app && yarn start",
+    "build": "lerna run build --stream",
+    "build:comp": "lerna run build --scope @boteteam/* --stream",
+    "pub": "node scripts/publish.js"
+  },
+  "resolutions": {
+    "@types/react": "17.x"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0",
+    "typescript": "^4.1.3",
+    "prettier": "^2.3.2"
+  },
+  "workspaces": [
+    "packages/a2ui-render",
+    "packages/a2ui-custom-kit",
+    "app"
+  ]
+}

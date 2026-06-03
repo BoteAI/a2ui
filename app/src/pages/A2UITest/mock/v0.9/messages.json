@@ -1,0 +1,105 @@
+[
+  {
+    "createSurface": {
+      "surfaceId": "main",
+      "catalogId": "standard"
+    }
+  },
+  {
+    "updateComponents": {
+      "surfaceId": "main",
+      "components": [
+        {
+          "id": "root",
+          "component": "Column",
+          "children": ["heading", "form", "submit-btn"]
+        },
+        {
+          "id": "heading",
+          "component": "Text",
+          "text": "Form Inputs",
+          "variant": "h2"
+        },
+        {
+          "id": "form",
+          "component": "Column",
+          "children": ["name-field", "email-field", "custom-field", "checkbox"]
+        },
+        {
+          "id": "name-field",
+          "component": "TextField",
+          "label": "Name",
+          "value": {
+            "path": "/form/name"
+          }
+        },
+        {
+          "id": "email-field",
+          "component": "TextField",
+          "label": "Email",
+          "value": {
+            "path": "/form/email"
+          }
+        },
+        {
+          "id": "custom-field",
+          "component": "TextField",
+          "label": {
+            "literalString": "备注（TextField，绑定 /form/customMemo）"
+          },
+          "value": {
+            "path": "/form/customMemo"
+          }
+        },
+        {
+          "id": "checkbox",
+          "component": "CheckBox",
+          "label": "Subscribe to newsletter",
+          "value": {
+            "path": "/form/subscribe"
+          }
+        },
+        {
+          "id": "submit-btn",
+          "component": "Button",
+          "child": "submit-text",
+          "primary": true,
+          "action": {
+            "name": "submit-form",
+            "context": {
+              "name": {
+                "path": "/form/name"
+              },
+              "email": {
+                "path": "/form/email"
+              },
+              "subscribe": {
+                "path": "/form/subscribe"
+              },
+              "customMemo": {
+                "path": "/form/customMemo"
+              }
+            }
+          }
+        },
+        {
+          "id": "submit-text",
+          "component": "Text",
+          "text": "Submit"
+        }
+      ]
+    }
+  },
+  {
+    "updateDataModel": {
+      "surfaceId": "main",
+      "path": "/form",
+      "value": {
+        "name": "",
+        "email": "",
+        "customMemo": "",
+        "subscribe": false
+      }
+    }
+  }
+]

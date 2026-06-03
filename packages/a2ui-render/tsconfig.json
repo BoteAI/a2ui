@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["./src", "./typings.d.ts"],
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    "declarationMap": true,
+    "sourceMap": true,
+    "noUnusedLocals": false
+  }
+}

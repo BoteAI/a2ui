@@ -1,0 +1,63 @@
+{
+  "name": "@boteteam/a2ui-custom-kit",
+  "version": "0.1.0",
+  "description": "博特 A2UI 自定义组件开发框架与工具集",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./remote-runtime": {
+      "types": "./dist/esm/remote-runtime/index.d.ts",
+      "import": "./dist/esm/remote-runtime/index.js",
+      "default": "./dist/esm/remote-runtime/index.js"
+    },
+    "./react-runtime": {
+      "types": "./dist/esm/react-runtime/index.d.ts",
+      "import": "./dist/esm/react-runtime/index.js",
+      "default": "./dist/esm/react-runtime/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "father dev",
+    "build": "father build"
+  },
+  "keywords": [
+    "a2ui",
+    "custom-component",
+    "web-components"
+  ],
+  "authors": [
+    "wujian"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist",
+    "templates",
+    "DEVELOPMENT_GUIDE.md",
+    "REMOTE_ESM_DEVELOPMENT.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": "^17.x",
+    "react-dom": "^17.x"
+  },
+  "dependencies": {
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "father": "^4.4.5",
+    "react": "17.x",
+    "react-dom": "17.x"
+  },
+  "gitHead": "97d982fe556fbcfab0e08603e7e816f1e26a5910"
+}

@@ -1,0 +1,19 @@
+{
+  "useWorkspaces": true,
+  "version": "0.1.0",
+  "npmClient": "yarn",
+  "registry": "https://registry.npmjs.org/",
+  "ignoreChanges": [
+    "**/*.md",
+    "**/*.test.ts",
+    "**/*.e2e.ts",
+    "**/fixtures/**",
+    "**/test/**"
+  ],
+  "packages": ["packages/*", "app"],
+  "command": {
+    "publish": {
+      "graphType": "all"
+    }
+  }
+}

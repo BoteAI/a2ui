@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.umi/
+.umi-production/
+app/dist
+
+# misc
+.DS_Store
+
+*.map
+.DS_Store
+.npmignore
+.env.local
+/.vscode
+/.idea
+/.cursor
+/.claude
+.history/
+
+.npmrc
+.qoder
+/design
+
+/packages/*/dist/
+/packages/a2ui-render/src/components/BaseRenderer/generated/antdShadowCss.generated.ts
