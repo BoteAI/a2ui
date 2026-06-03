@@ -1,6 +1,6 @@
 {
   "name": "@boteteam/a2ui-render",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "博特-A2UI 协议渲染引擎",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -52,5 +52,5 @@
     "@babel/runtime": "^7.23.9",
     "zod": "^3.25.76"
   },
-  "gitHead": "2e87d468eeb6ce7076781457d3790be2e3cf656b"
+  "gitHead": "8845117c2674f0fcf23165976dd45b829d28b3dc"
 }

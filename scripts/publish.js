@@ -75,7 +75,7 @@ fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2) + '\n');
 
 // ─── 执行发布 ───
 try {
-  execSync('npm publish --access public', {
+  execSync('npm publish --access public --registry https://registry.npmjs.org/', {
     cwd: path.join(rootDir, pkgDir),
     stdio: 'inherit',
   });
