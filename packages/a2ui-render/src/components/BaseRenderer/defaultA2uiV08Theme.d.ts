@@ -1,2 +1,1 @@
-declare const theme: Record<string, any>;
-export default theme;
+export declare const DEFAULT_A2UI_V08_THEME: Record<string, any>;

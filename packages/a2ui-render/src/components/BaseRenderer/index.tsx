@@ -11,8 +11,7 @@ export type {
 export { getValueFromPath, resolveValue, resolveActionContext } from '../../utils';
 
 export { DEFAULT_A2UI_LIT_STYLE_VARS } from './defaultA2uiLitStyleVars';
-import _DEFAULT_A2UI_V08_THEME from './defaultA2uiV08Theme';
-export const DEFAULT_A2UI_V08_THEME = _DEFAULT_A2UI_V08_THEME;
+export { DEFAULT_A2UI_V08_THEME } from './defaultA2uiV08Theme';
 export {
   A2UI_THEME_PRESET_NAMES,
   A2UI_THEME_PRESETS,
