@@ -12,7 +12,7 @@ const REMOTE_SHOWCASE_ITEM: GalleryItem = {
   description: '展示 4 个自定义组件：原生 DOM、React 桥接、Shadow 样式、Action 派发',
   category: 'special',
   messages: showcaseMessages as A2UIMessage[],
-  guidePath: V9_CUSTOM_COMPONENTS_GUIDE_PATH,
+  guideUrl: V9_CUSTOM_COMPONENTS_GUIDE_PATH,
 };
 
 const A2UIPlaygroupV9: React.FC = () => {

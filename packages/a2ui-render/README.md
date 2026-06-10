@@ -1,85 +1,124 @@
 # @bote/a2ui-render
 
+**仓库**：[github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
+
 ## 这个包是做什么的
 
-**把 A2UI 协议里的消息 JSON 画成页面上的界面。**
+**把 A2UI 协议里的 messages JSON 渲染为可交互的 React 界面。**
 
-后端或 Agent 下发的是一段「描述界面该怎么长」的结构化数据，本包在 React 页面里负责**展示、主题样式、按钮回调**等。你不需要自己解析协议里的每一种消息类型，交给 **`BaseRenderer`** 即可。
+Agent 或后端下发描述界面结构与数据绑定的消息数组，本包负责解析、绘制标准 A2UI 组件、主题样式与 `onAction` 回调。只需安装 **`@bote/a2ui-render`**（及 React 17 peer）即可接入，**不依赖** `@bote/a2ui-custom-kit` 或 `@bote/types`。
 
-若协议里用到了你们自己的组件名，需要另外准备「名字对应到具体组件」的注册表。本地写的组件通常配合 **`@bote/a2ui-custom-kit`** 产出注册表；**打成独立 `.mjs` 在运行时加载**时，也是同一套：**先得到一份注册表对象，再交给下面的 `BaseRenderer`**。
+自定义组件有两种接入方式：
+
+| 方式 | 适用场景 |
+|------|----------|
+| **`remoteComponentUrls`** | 远程 `.mjs` 已部署到 CDN，传 URL 即可（推荐） |
+| **`customComponents`** | 本地静态注册表，或在 `useEffect` 中手动合并远程加载结果 |
+
+自定义组件的**开发**与 ESM 打包见 **`@bote/a2ui-custom-kit`** 与仓库文档 [`app/public/docs/custom-components-guide.md`](../../app/public/docs/custom-components-guide.md)。
 
 ---
 
-## 怎么用
+## 快速开始
 
-1. 在业务项目里安装 **`@bote/a2ui-render`**。  
-2. 准备好**当前页面约定版本**下的消息数组，以及协议版本 **`0.8`** 或 **`0.9`**。  
-3. 在页面里渲染 **`BaseRenderer`**，传入消息、版本，需要时传入 **`onAction`** 和 **`customComponents`**。
+```bash
+yarn add @bote/a2ui-render
+```
 
 ```tsx
 import { BaseRenderer, type A2UIMessage } from '@bote/a2ui-render';
 
-const messages: A2UIMessage[] = [
-  /* 与 protocolVersion 一致的消息 */
-];
+const messages: A2UIMessage[] = [/* 与 protocolVersion 一致的协议消息 */];
 
 <BaseRenderer
   messages={messages}
   protocolVersion="0.9"
+  themePreset="conversation"
   onAction={({ name, context }) => {
-    /* 按钮等交互在这里处理 */
+    /* 按钮、表单等交互 */
   }}
 />
 ```
 
-有自定义组件时，把注册表对象传给 **`customComponents`** 即可，**键名与消息 JSON 里的 `component` 字符串完全一致**。
+---
+
+## 核心 Props（BaseRenderer）
+
+| Prop | 说明 |
+|------|------|
+| `messages` | A2UI 协议消息数组 |
+| `protocolVersion` | `'0.8'` 或 `'0.9'` |
+| `themePreset` | 内置主题：`default` / `conversation` / `cyber` / `platformInterconnect` / `deepBlueWisdom` |
+| `onAction` | 用户交互回调 |
+| `customComponents` | 本地自定义组件注册表，key 与协议 `"component"` 一致 |
+| `remoteComponentUrls` | 远程 ESM `.mjs` URL 数组，**内部自动加载并与 `customComponents` 合并** |
+| `injectAntdStylesInShadow` | 远程组件使用 antd 时建议开启 |
+
+完整主题变量见同目录 **`styleVars.md`**。
 
 ---
 
-## 远程自定义组件怎么接到渲染上
+## 远程自定义组件（传 URL）
 
-远程脚本由 **`@bote/a2ui-custom-kit`** 里的 **`loadRemoteA2UICustomRegistry`**（单个 `.mjs`）或 **`loadRemoteA2UICustomRegistries`**（多个 URL）加载，返回的也是**注册表片段**，类型与 **`BaseRenderer`** 的 **`customComponents`** 一致。业务里常见做法是：**和本地静态注册表合并，再一并传给 `BaseRenderer`**。
+**推荐**：直接把 CDN 上的 `.mjs` 地址传给 `remoteComponentUrls`，无需先 `await` 加载，也无需安装 `@bote/a2ui-custom-kit`。
 
-**单个远程地址**
+```tsx
+import { BaseRenderer } from '@bote/a2ui-render';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  remoteComponentUrls={[
+    'https://cdn.example.com/DemoNativeElement.mjs',
+    'https://cdn.example.com/DemoActionDispatch.mjs',
+  ]}
+  onAction={handleAction}
+/>
+```
+
+可与本地注册表同时使用（远程项与 `customComponents` 合并，同名时以后者为准）：
+
+```tsx
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={localRegistry}
+  remoteComponentUrls={['https://cdn.example.com/DemoNativeElement.mjs']}
+  onAction={handleAction}
+/>
+```
+
+远程模块须为浏览器可 `import()` 的 **ESM**，并命名导出注册表，默认导出名 `a2uiRemoteRegistry`（也支持 `a2uiCustomRegistry`、`registry`）。
+
+---
+
+## 手动加载远程注册表（高级）
+
+需要在渲染前自行控制加载时机时，使用本包导出的 loader（类型同样从本包导入）：
 
 ```ts
 import {
   loadRemoteA2UICustomRegistry,
-  mergeRegistryEntries,
-} from '@bote/a2ui-custom-kit';
-import type { A2UICustomComponentRegistry } from '@bote/types';
-
-const remotePart = await loadRemoteA2UICustomRegistry(
-  'https://cdn.example.com/a2ui-remote/RemoteGlowCapsule.mjs',
-);
-
-const customComponents: A2UICustomComponentRegistry = mergeRegistryEntries(
-  staticRegistry,
-  remotePart,
-);
-```
-
-**多个远程地址一次合并**
-
-```ts
-import {
   loadRemoteA2UICustomRegistries,
-  mergeRegistryEntries,
-} from '@bote/a2ui-custom-kit';
-import type { A2UICustomComponentRegistry } from '@bote/types';
+  type A2UICustomComponentRegistry,
+} from '@bote/a2ui-render';
 
-const remotePart = await loadRemoteA2UICustomRegistries([
-  'https://cdn.example.com/a2ui-remote/RemoteGlowCapsule.mjs',
-  'https://cdn.example.com/a2ui-remote/RemoteReactBadge.mjs',
+// 单个 URL
+const remotePart = await loadRemoteA2UICustomRegistry(
+  'https://cdn.example.com/DemoNativeElement.mjs',
+);
+
+// 多个 URL
+const merged = await loadRemoteA2UICustomRegistries([
+  'https://cdn.example.com/DemoNativeElement.mjs',
+  'https://cdn.example.com/DemoActionDispatch.mjs',
 ]);
 
-const customComponents: A2UICustomComponentRegistry = mergeRegistryEntries(
-  staticRegistry,
-  remotePart,
-);
+const customComponents: A2UICustomComponentRegistry = {
+  ...localRegistry,
+  ...remotePart,
+};
 ```
-
-**渲染**：合并得到的 **`customComponents`** 直接交给 **`BaseRenderer`**（在 **`useEffect`**、路由 **`loader`** 等能 **`await`** 的地方先加载好，再放进 **`useState` 或 store** 即可）。
 
 ```tsx
 <BaseRenderer
@@ -90,16 +129,46 @@ const customComponents: A2UICustomComponentRegistry = mergeRegistryEntries(
 />
 ```
 
-若远程包导出的注册表名字不是默认的 **`a2uiRemoteRegistry`**，可在加载函数里传 **`{ exportName: '你的导出名' }`**。
-
-**和气泡里 `RemoteComp` 的区别**：`RemoteComp` 走的是另一条构建与加载方式；**A2UI 远程块**请用 **`import()` 可用的 ESM `.mjs`**，并按上面方式合并进 **`BaseRenderer`**。远程包怎么打、CORS、鉴权、联调清单等见 **`@bote/a2ui-custom-kit` 的 `REMOTE_ESM_DEVELOPMENT.md`**。
+非默认导出名时：`loadRemoteA2UICustomRegistry(url, { exportName: 'yourExport' })`。
 
 ---
 
-## 还可以看哪里
+## 主要导出
 
-- **主题变量列表**：同目录 **`styleVars.md`**。  
-- **在线拼 JSON、对照官方行为**：[A2UI Playground](https://a2ui-sdk.js.org/playground/)。  
-- **本仓库里的试玩页**：`chatBot` 里的 **`A2UITest`**（含远程 URL 合并进预览的示例）。  
-- **自定义组件怎么写**：**`@bote/a2ui-custom-kit`** 的 README 与 **`DEVELOPMENT_GUIDE.md`**。  
-- **远程 ESM 工程与联调细节**：**`@bote/a2ui-custom-kit`** 的 **`REMOTE_ESM_DEVELOPMENT.md`**。
+| 导出 | 说明 |
+|------|------|
+| `BaseRenderer` | 核心渲染器 |
+| `BoteRenderer` | 博特扩展渲染器 |
+| `LitSurfaceHost` | 底层 Lit 宿主（高级） |
+| `A2UI_THEME_PRESETS` / `A2UI_THEME_PRESET_NAMES` | 内置主题 |
+| `loadRemoteA2UICustomRegistry` | 加载单个远程 `.mjs` |
+| `loadRemoteA2UICustomRegistries` | 批量加载并合并 |
+| `inferProtocolVersionFromMessages` | 自动推断 v0.8 / v0.9 |
+| `useResponsive` / `isMobile` 等 | 响应式工具 |
+| `A2UIMessage` / `A2UICustomComponentRegistry` 等 | 类型定义（本包自带，无需 `@bote/types`） |
+
+---
+
+## 使用 antd 的远程组件
+
+A2UI 在嵌套 ShadowRoot 中渲染，全局 `antd.css` 不会自动穿透：
+
+```tsx
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  remoteComponentUrls={['https://cdn.example.com/YourComponent.mjs']}
+  injectAntdStylesInShadow
+  onAction={handleAction}
+/>
+```
+
+远程 bundle **无需** 再 `import 'antd/dist/antd.min.css'`。`Select` 等弹出层建议 `ConfigProvider` + `getPopupContainer` 指向 Shadow 内节点。
+
+---
+
+## 相关文档
+
+- **主题变量**：`styleVars.md`
+- **自定义组件开发全流程**：[`app/public/docs/custom-components-guide.md`](../../app/public/docs/custom-components-guide.md)
+- **本仓库 Playground**：`app/src/pages/a2ui-playgroup`

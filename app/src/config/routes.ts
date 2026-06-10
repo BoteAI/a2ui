@@ -13,8 +13,13 @@ const routers: IRouteProps[] = [
   },
   {
     exact: true,
+    path: '/a2ui-playgroup/v9/custom-components-guide',
+    component: './a2ui-playgroup/v9/customComponentsGuideDoc',
+  },
+  {
+    exact: true,
     path: '/a2ui-playgroup/v9/custom-components',
-    component: './a2ui-playgroup/v9/customComponentsGuide',
+    redirect: '/a2ui-playgroup/v9/custom-components-guide',
   },
   {
     exact: true,

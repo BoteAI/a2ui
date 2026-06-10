@@ -8,8 +8,8 @@ export type GalleryItem = {
   description?: string;
   category: Exclude<GalleryCategoryId, 'all'>;
   messages: A2UIMessage[];
-  /** 关联的开发指南页路径（hash 路由，如 /a2ui-playgroup/v9/custom-components） */
-  guidePath?: string;
+  /** 关联的开发指南文档 URL（站内静态路径或外链，新标签页打开） */
+  guideUrl?: string;
 };
 
 type V09GalleryFile = {

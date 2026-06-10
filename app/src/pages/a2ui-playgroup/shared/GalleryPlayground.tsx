@@ -22,7 +22,7 @@ import DemoCard from './DemoCard';
 import { GALLERY_CATEGORIES, GALLERY_CATEGORY_LABELS } from './galleryCategories';
 import type { GalleryCategoryId, GalleryItem } from './gallery';
 import PlaygroundEditor from './PlaygroundEditor';
-import { navigateTo } from './navigate';
+import { openGuideUrl } from './navigate';
 import styles from './index.less';
 
 const A2UI_DEMO_QUERY_KEY = 'a2uiDemo';
@@ -346,13 +346,13 @@ const GalleryPlayground: React.FC<GalleryPlaygroundProps> = ({
               <button type="button" className={styles.detailModalBtnSecondary} onClick={() => setActiveItem(null)}>
                 关闭
               </button>
-              {activeItem.guidePath ? (
+              {activeItem.guideUrl ? (
                 <button
                   type="button"
                   className={styles.detailModalBtnGuide}
                   onClick={() => {
                     setActiveItem(null);
-                    navigateTo(activeItem.guidePath!);
+                    openGuideUrl(activeItem.guideUrl!);
                   }}
                 >
                   <BookOutlined /> 开发指南

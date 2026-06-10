@@ -7,7 +7,7 @@ import {
 } from '@bote/a2ui-render';
 import type { A2UICustomComponentRegistry } from '@bote/a2ui-custom-kit';
 import type { GalleryItem } from './gallery';
-import { navigateTo } from './navigate';
+import { navigateTo, openGuideUrl } from './navigate';
 import styles from './index.less';
 
 export type DemoCardProps = {
@@ -98,13 +98,13 @@ const DemoCard: React.FC<DemoCardProps> = ({
           <div className={styles.demoCardDesc}>{item.description}</div>
         ) : null}
         <div className={styles.demoCardFooter}>
-          {item.guidePath ? (
+          {item.guideUrl ? (
             <button
               type="button"
               className={styles.demoCardGuideBtn}
               onClick={(e) => {
                 e.stopPropagation();
-                navigateTo(item.guidePath!);
+                openGuideUrl(item.guideUrl!);
               }}
             >
               <BookOutlined /> 开发指南

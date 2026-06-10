@@ -16,16 +16,18 @@
     "antd-dayjs-webpack-plugin": "^1.0.6",
     "react": "17.x",
     "react-dom": "17.x",
+    "react-markdown": "8",
+    "remark-gfm": "3",
     "umi": "^3.5.41"
   },
   "devDependencies": {
+    "@lingxiteam/env": "^1.0.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",
-    "@lingxiteam/env": "^1.0.2",
+    "esbuild": "^0.21.5",
     "less": "^4.2.0",
     "less-loader": "5.0.0",
-    "typescript": "^4.1.2",
-    "esbuild": "^0.21.5"
+    "typescript": "^4.1.2"
   }
 }

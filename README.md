@@ -1,89 +1,127 @@
-# a2ui
+# Bote A2UI
 
-A2UI 协议的 React 渲染生态，包含协议渲染引擎与自定义组件开发工具集，支持 A2UI v0.8 / v0.9 协议。
+**A React rendering SDK for the [A2UI](https://github.com/google/A2UI) protocol — turn LLM-generated UI messages into interactive web interfaces, with theming, custom components, and a live Playground.**
 
----
+English | [中文](./README.zh-CN.md) · **Repository**: [github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
 
-## 包结构
-
-```
-packages/
-├── a2ui-render        @bote/a2ui-render      协议渲染引擎
-└── a2ui-custom-kit    @bote/a2ui-custom-kit  自定义组件开发工具集
-```
+> This project is under active development. `@bote/a2ui-render` and `@bote/a2ui-custom-kit` are being prepared for open source. Feedback and contributions are welcome.
 
 ---
 
-## @bote/a2ui-render — 协议渲染引擎
+## Try the Playground
 
-**把 A2UI 协议消息 JSON 渲染为 React 页面界面。**
+Browse 30+ component demos, switch themes, and edit JSON — no Agent setup required.
 
-Agent / 后端下发的是描述「界面该怎么长」的结构化消息数组，本包负责将其渲染为可交互界面，覆盖主题样式、事件回调、自定义组件挂载等。
+**Requirements**: Node.js 16+ and Yarn 1.x
 
-### 核心导出
+```bash
+git clone https://github.com/BoteAI/a2ui.git
+cd a2ui
 
-| 导出名 | 说明 |
-|---|---|
-| `BaseRenderer` | 核心渲染器组件，接收 messages + 可选注册表 |
-| `BoteRenderer` | 博特定制渲染器（基于 BaseRenderer 扩展） |
-| `LitSurfaceHost` | 底层 Lit 渲染宿主（高级用法） |
-| `A2UI_THEME_PRESETS` | 内置主题预设列表 |
-| `loadRemoteA2UICustomRegistry` | 加载单个远程自定义组件 `.mjs` |
-| `loadRemoteA2UICustomRegistries` | 批量加载多个远程自定义组件 |
-| `inferProtocolVersionFromMessages` | 从消息自动推断协议版本 |
-| `useResponsive` / `isMobile` 等 | 响应式工具函数 |
+yarn bs          # install workspace dependencies
+yarn build       # build packages (first run or after package changes)
+yarn start       # start Playground dev server
+```
 
-### 快速使用
+Open in your browser:
+
+| Page | URL |
+|------|-----|
+| **Playground v0.9** (default) | [http://localhost:8000/#/a2ui-playgroup/v9](http://localhost:8000/#/a2ui-playgroup/v9) |
+| Playground v0.8 | [http://localhost:8000/#/a2ui-playgroup/v8](http://localhost:8000/#/a2ui-playgroup/v8) |
+| Custom component guide | [http://localhost:8000/#/a2ui-playgroup/v9/custom-components-guide](http://localhost:8000/#/a2ui-playgroup/v9/custom-components-guide) |
+
+Alternatively: `cd app && yarn dev` — same as `yarn start` from the repo root.
+
+While developing packages, run `yarn watch` in another terminal to rebuild `@bote/a2ui-render` and `@bote/a2ui-custom-kit` on change.
+
+---
+
+## What Problem Does It Solve?
+
+When an AI Agent or backend sends **A2UI protocol messages** (structured JSON describing UI layout, data bindings, and actions), you need a **client-side renderer** that can:
+
+1. Parse streaming or batch protocol messages
+2. Draw standard A2UI components (Text, Button, Card, List, …)
+3. Apply consistent theming across surfaces
+4. Wire user interactions back to your business layer via `onAction`
+5. **Extend** the component catalog when the protocol references your own component names
+
+**Bote A2UI** is a **Web / React** solution for that pipeline, focused on **browser-based Agent UI**, chat bubbles, admin consoles, and micro-frontends.
+
+```
+Agent / Backend
+      │  A2UI messages JSON
+      ▼
+@bote/a2ui-render          ← protocol renderer (React + Lit surface)
+      │  customComponents registry
+      ▼
+@bote/a2ui-custom-kit      ← define, register, bundle custom components
+      │
+      ▼
+Your business UI (local bundle or remote .mjs)
+```
+
+---
+
+## Packages
+
+| Package | npm | Role |
+|---------|-----|------|
+| **a2ui-render** | `@bote/a2ui-render` | A2UI v0.8 / v0.9 protocol renderer |
+| **a2ui-custom-kit** | `@bote/a2ui-custom-kit` | Custom component authoring toolkit |
+
+This repo also ships a **Playground app** under `app/` for browsing demos, editing JSON, and validating custom components — not published to npm.
+
+---
+
+## Key Features
+
+### 1. Protocol Rendering Engine
+
+`BaseRenderer` accepts an array of A2UI messages and renders a fully interactive surface. Supports **protocol v0.8 and v0.9**, automatic version inference, responsive helpers, and declarative action callbacks.
 
 ```tsx
 import { BaseRenderer, type A2UIMessage } from '@bote/a2ui-render';
 
-const messages: A2UIMessage[] = [ /* 协议消息 */ ];
-
 <BaseRenderer
   messages={messages}
   protocolVersion="0.9"
+  themePreset="deepBlueWisdom"
   onAction={({ name, context }) => {
-    // 处理按钮等交互事件
+    // handle button clicks, form submits, etc.
   }}
 />
 ```
 
-携带自定义组件时，将注册表传入 `customComponents`：
+### 2. Built-in Theme Presets — One-Prop Switching
 
-```tsx
-<BaseRenderer
-  messages={messages}
-  protocolVersion="0.9"
-  customComponents={customComponents}
-  onAction={handleAction}
-/>
-```
+Four curated visual themes ship out of the box (plus a default base), each implemented as CSS variable overrides and optional Shadow DOM stylesheets. Switch themes at runtime with a single `themePreset` prop — no rebuild required.
 
-> 详细文档见 [`packages/a2ui-render/README.md`](./packages/a2ui-render/README.md) 与 [`packages/a2ui-render/styleVars.md`](./packages/a2ui-render/styleVars.md)。
+| Preset | Description |
+|--------|-------------|
+| `default` | A2UI Lit default tokens |
+| `conversation` | Chat-friendly spacing and rounded controls |
+| `cyber` | Vibrant tech / neon accent style |
+| `platformInterconnect` | Enterprise platform interconnect look |
+| `deepBlueWisdom` | Deep blue wisdom dashboard style |
 
----
+See [`packages/a2ui-render/styleVars.md`](./packages/a2ui-render/styleVars.md) for the full token list.
 
-## @bote/a2ui-custom-kit — 自定义组件开发工具集
+### 3. Custom Components — Two Integration Paths
 
-**为 A2UI 扩展自定义组件的开发框架与工具集。**
+When protocol messages reference **your own component names**, register implementations via `@bote/a2ui-custom-kit`:
 
-当协议消息中出现业务自定义的组件名时，需要把组件名映射到真正的实现。本包提供类型定义、API 描述、注册表构建、React/原生元素适配器等，减少与渲染层之间的胶水代码。
+| Path | When to use | Output |
+|------|-------------|--------|
+| **Local registry** | Components live in the same app as the renderer | `customComponents` object passed to `BaseRenderer` |
+| **Remote ESM bundle** | Independent teams, CDN delivery, micro-frontends | esbuild `.mjs` loaded via `loadRemoteA2UICustomRegistry` |
 
-### 核心导出
+Both paths share the same registry shape — define API with Zod, implement as **native Web Component** or **React bridge**, merge entries, and hand off to the renderer.
 
-| 导出名 | 说明 |
-|---|---|
-| `defineComponentApi` | 定义组件的 Props API schema |
-| `defineRegistryEntry` | 构建单个组件的注册表条目 |
-| `defineSimpleRegistryEntry` | 快速构建简单注册表条目 |
-| `mergeRegistryEntries` | 合并多个注册表（本地 + 远程） |
-| `createReactComponent` | 将 React 组件适配为 A2UI 自定义元素 |
-| `createNativeElement` | 将原生 Web Component 适配为 A2UI 自定义元素 |
-| `readComponentProps` / `dispatchA2UIAction` 等 | 元素运行时工具 |
-| `subscribeV09ComponentUpdates` | 订阅 v0.9 协议组件属性更新 |
+![Custom component development and runtime rendering pipeline](./app/public/assets/custom-component-pipeline.png)
 
-### 快速使用
+**Typical local flow**
 
 ```ts
 import {
@@ -93,61 +131,181 @@ import {
   mergeRegistryEntries,
 } from '@bote/a2ui-custom-kit';
 
-// 1. 定义组件 API
-const api = defineComponentApi({
-  name: 'MyCard',
-  props: { title: { type: 'string' } },
-});
-
-// 2. 用 React 组件实现
+const api = defineComponentApi({ name: 'MyCard', shape: { title: z.string() } });
 const element = createReactComponent(({ title }) => <div>{title}</div>);
+const registry = mergeRegistryEntries(defineRegistryEntry({ api, element }));
+```
 
-// 3. 注册并合并
-const registry = mergeRegistryEntries(
-  defineRegistryEntry({ api, element }),
+**Remote flow**
+
+```ts
+import { loadRemoteA2UICustomRegistry, mergeRegistryEntries } from '@bote/a2ui-render';
+
+const remote = await loadRemoteA2UICustomRegistry(
+  'https://cdn.example.com/custom-components.mjs',
 );
-
-// 4. 传给 BaseRenderer
-<BaseRenderer messages={messages} customComponents={registry} />
+const customComponents = mergeRegistryEntries(localRegistry, remote);
 ```
 
+> Detailed guides: [`packages/a2ui-custom-kit/README.md`](./packages/a2ui-custom-kit/README.md) · [`app/public/docs/custom-components-guide.md`](./app/public/docs/custom-components-guide.md)
+
+### 4. A2UI Playground
+
+A built-in **Playground** lets you explore, preview, and iterate without wiring a full Agent first.
+
+![A2UI Playground — component gallery with theme switching](./app/public/assets/playground.png)
+
+| Capability | Details |
+|------------|---------|
+| **Component gallery** | 30+ v0.9 demos across cards, forms, data views, and special scenarios |
+| **Protocol toggle** | Switch between A2UI v0.8 and v0.9 |
+| **Live theme switch** | Preview all built-in presets side by side |
+| **JSON editor** | Edit messages in place and see instant preview |
+| **Custom component guide** | Open **Remote Showcase** in the gallery → **Development Guide**, or read [`app/public/docs/custom-components-guide.md`](./app/public/docs/custom-components-guide.md) |
+
+See [Try the Playground](#try-the-playground) for how to start the app locally.
+
+### 5. Roadmap — SDK Extension Components
+
+The official A2UI catalog covers core layout and input primitives. We plan to ship **additional built-in components inside `@bote/a2ui-render`** — such as data tables, carousels, and rich text — to fill common product gaps without requiring every integrator to build them from scratch.
+
+Planned categories include data display, rich content, and domain-specific widgets. Contributions and RFCs are welcome via Issues.
 
 ---
 
-## 两包关系
+## Architecture
 
 ```
-消息 JSON
-    │
-    ▼
-@bote/a2ui-render
-    │  BaseRenderer 接收 customComponents
-    ▼
-@bote/a2ui-custom-kit
-    │  defineRegistryEntry / createReactComponent
-    ▼
- 业务自定义组件实现
+┌─────────────────────────────────────────────────────────────┐
+│  Agent / LLM                                                 │
+│  emits updateComponents / updateDataModel messages           │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ JSON
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  @bote/a2ui-render                                           │
+│  BaseRenderer → LitSurfaceHost → @a2ui/lit Web Components  │
+│  · theme presets · onAction · remote registry merge          │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ component name lookup
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  @bote/a2ui-custom-kit                                       │
+│  defineComponentApi · createReactComponent / createNative   │
+│  defineRegistryEntry · mergeRegistryEntries · remote ESM   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-- **只渲染标准协议组件** → 只需安装 `@bote/a2ui-render`
-- **需要自定义组件** → 同时安装两个包，用 `a2ui-custom-kit` 产出注册表，传给 `a2ui-render`
-- **自定义组件打成远程 ESM** → 参考 `a2ui-custom-kit` 的远程开发文档
+**Which package do I need?**
+
+- **Standard A2UI components only** → `@bote/a2ui-render`
+- **Custom components in-app** → both packages; kit produces registry, render consumes it
+- **Custom components as remote scripts** → kit for authoring + render's `loadRemoteA2UICustomRegistry` at runtime
 
 ---
 
-## 开发
+## Quick Start
+
+### Install
 
 ```bash
-# 安装依赖
+yarn add @bote/a2ui-render
+
+# if you need custom components
+yarn add @bote/a2ui-custom-kit
+```
+
+### Minimal render
+
+```tsx
+import { BaseRenderer } from '@bote/a2ui-render';
+
+export function AgentPanel({ messages }) {
+  return (
+    <BaseRenderer
+      messages={messages}
+      protocolVersion="0.9"
+      themePreset="conversation"
+      onAction={(event) => console.log(event.name, event.context)}
+    />
+  );
+}
+```
+
+### With custom components
+
+```tsx
+import { BaseRenderer } from '@bote/a2ui-render';
+import { myCustomRegistry } from './my-custom-registry';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={myCustomRegistry}
+  onAction={handleAction}
+/>
+```
+
+---
+
+## API Highlights
+
+### `@bote/a2ui-render`
+
+| Export | Description |
+|--------|-------------|
+| `BaseRenderer` | Core renderer — messages + optional registry |
+| `BoteRenderer` | Bote-specific renderer extension |
+| `LitSurfaceHost` | Low-level Lit surface host (advanced) |
+| `A2UI_THEME_PRESETS` / `A2UI_THEME_PRESET_NAMES` | Built-in theme definitions |
+| `loadRemoteA2UICustomRegistry` | Dynamic import a remote `.mjs` registry |
+| `loadRemoteA2UICustomRegistries` | Batch-load multiple remote registries |
+| `inferProtocolVersionFromMessages` | Auto-detect v0.8 vs v0.9 |
+| `useResponsive` / `isMobile` | Responsive utilities |
+
+### `@bote/a2ui-custom-kit`
+
+| Export | Description |
+|--------|-------------|
+| `defineComponentApi` | Zod-based component API schema |
+| `defineRegistryEntry` / `defineSimpleRegistryEntry` | Build registry entries |
+| `mergeRegistryEntries` | Merge local + remote registries |
+| `createReactComponent` | React → A2UI custom element adapter |
+| `createNativeElement` | Native Web Component adapter |
+| `readComponentProps` / `dispatchA2UIAction` | Runtime element helpers |
+| `subscribeV09ComponentUpdates` | Subscribe to v0.9 property updates |
+
+---
+
+## Development
+
+```bash
+# install all workspace dependencies
 yarn bs
 
-# 同时监听两个包
+# start Playground (see "Try the Playground" above)
+yarn start
+
+# watch both packages
 yarn watch
 
-# 构建所有包
+# build all packages
 yarn build
 
-# 发布某个包（自动更新 version 和 gitHead）
+# publish (bumps version + gitHead)
 yarn pub a2ui-render 0.1.1
 yarn pub a2ui-custom-kit 0.1.1
 ```
+
+---
+
+## Related
+
+- [A2UI protocol (Google)](https://github.com/google/A2UI)
+- [Repository](https://github.com/BoteAI/a2ui)
+
+---
+
+## License
+
+MIT
