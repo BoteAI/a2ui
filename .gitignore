@@ -3,6 +3,7 @@ dist/
 .umi/
 .umi-production/
 app/dist
+app/public
 
 # misc
 .DS_Store

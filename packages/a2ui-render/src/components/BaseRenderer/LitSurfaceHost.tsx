@@ -165,7 +165,7 @@ const LIT_SHADOW_TAG = {
 } as const;
 
 class A2UIRenderErrorBoundary extends React.Component<
-  React.PropsWithChildren<unknown>,
+  React.PropsWithChildren<{ silentOnError?: boolean }>,
   { hasError: boolean; error: Error | null }
 > {
   state: { hasError: boolean; error: Error | null } = { hasError: false, error: null };
@@ -176,12 +176,20 @@ class A2UIRenderErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: unknown) {
+    if (this.props.silentOnError) {
+      // eslint-disable-next-line no-console
+      console.warn('[A2UI Lit 渲染跳过]', error);
+      return;
+    }
     // eslint-disable-next-line no-console
     console.error('[A2UI Lit 渲染失败]', error);
   }
 
   render() {
     if (this.state.hasError && this.state.error) {
+      if (this.props.silentOnError) {
+        return null;
+      }
       const e = this.state.error;
       return (
         <A2UIParseErrorPanel
@@ -243,6 +251,11 @@ export interface LitSurfaceHostProps {
    * 传 undefined 表示不启用；传 null 表示清除高亮。
    */
   selectedComponentId?: string | null
+
+  /**
+   * 为 true 时解析或渲染失败不展示错误面板，仅空白占位（适用于 Gallery 多卡片预览）。
+   */
+  silentOnError?: boolean
 }
 
 /**
@@ -279,7 +292,10 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
   remoteComponentUrls,
   injectAntdStylesInShadow = false,
   selectedComponentId,
+  silentOnError = false,
 }) => {
+  const silentOnErrorRef = useRef(silentOnError);
+  silentOnErrorRef.current = silentOnError;
   const mergedStyleVars = useMemo(
     () => mergeLitSurfaceStyleVars(styleVars, protocolVersion, themePreset),
     [styleVars, protocolVersion, themePreset],
@@ -599,11 +615,15 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
         lastFailedInputKeyRef.current = renderInputKey;
         builtMessagesRef.current = null;
         lastProcessedCountRef.current = 0;
-        setLitParseError({
-          title: 'A2UI 解析失败',
-          message: `处理消息后未找到 surface「${surfaceId}」。请确认各条消息中的 surfaceId 一致（0.8：beginRendering、surfaceUpdate、dataModelUpdate；0.9：createSurface、updateComponents、updateDataModel）。`,
-          debugMessages: sanitized,
-        });
+        if (!silentOnErrorRef.current) {
+          setLitParseError({
+            title: 'A2UI 解析失败',
+            message: `处理消息后未找到 surface「${surfaceId}」。请确认各条消息中的 surfaceId 一致（0.8：beginRendering、surfaceUpdate、dataModelUpdate；0.9：createSurface、updateComponents、updateDataModel）。`,
+            debugMessages: sanitized,
+          });
+        } else {
+          setLitParseError(null);
+        }
         processorRef.current = null;
         return undefined;
       }
@@ -671,15 +691,21 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
       };
     } catch (err) {
       lastFailedInputKeyRef.current = renderInputKey;
-      // eslint-disable-next-line no-console
-      console.error('[A2UI Lit] processMessages failed', err);
-      const f = formatA2UIParseError(err);
-      setLitParseError({
-        title: 'A2UI 解析失败',
-        message: f.message,
-        detail: f.detail,
-        debugMessages: sanitized,
-      });
+      if (silentOnErrorRef.current) {
+        // eslint-disable-next-line no-console
+        console.warn('[A2UI Lit] processMessages skipped', err);
+        setLitParseError(null);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('[A2UI Lit] processMessages failed', err);
+        const f = formatA2UIParseError(err);
+        setLitParseError({
+          title: 'A2UI 解析失败',
+          message: f.message,
+          detail: f.detail,
+          debugMessages: sanitized,
+        });
+      }
       processorRef.current = null;
       builtMessagesRef.current = null;
       lastProcessedCountRef.current = 0;
@@ -729,6 +755,9 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
   ].filter(Boolean).join(' ');
 
   if ((!messages || messages.length === 0) && (!Array.isArray(components) || components.length === 0 || !rootComponentId)) {
+    if (silentOnError) {
+      return <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)} />;
+    }
     return (
       <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)}>
         <A2UIParseErrorPanel
@@ -740,6 +769,9 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
   }
 
   if (litRuntimeError) {
+    if (silentOnError) {
+      return <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)} />;
+    }
     return (
       <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)}>
         <A2UIParseErrorPanel
@@ -751,6 +783,9 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
   }
 
   if (remoteRegistryError) {
+    if (silentOnError) {
+      return <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)} />;
+    }
     return (
       <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)}>
         <A2UIParseErrorPanel
@@ -764,8 +799,8 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
 
   return (
     <div className={containerClassName} style={toCssVarStyle(mergedStyleVars)}>
-      <A2UIRenderErrorBoundary>
-        {litParseError ? (
+      <A2UIRenderErrorBoundary silentOnError={silentOnError}>
+        {litParseError && !silentOnError ? (
           <A2UIParseErrorPanel
             title={litParseError.title || 'A2UI 解析失败'}
             message={litParseError.message}

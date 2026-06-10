@@ -37,7 +37,7 @@ if (!versionRegex.test(version)) {
 }
 
 const packageJsonPath = path.resolve(__dirname, '../package.json');
-const boteteamPackages = ['@boteteam/icons', '@boteteam/theme', '@boteteam/types', '@boteteam/utils'];
+const botePackages = ['@bote/icons', '@bote/theme', '@bote/types', '@bote/utils'];
 
 console.log('🚀 开始构建外部包...');
 console.log(`📦 目标版本: ${version}`);
@@ -53,7 +53,7 @@ try {
   ['dependencies', 'devDependencies', 'peerDependencies'].forEach(depType => {
     if (packageJson[depType]) {
       originalDeps[depType] = {};
-      boteteamPackages.forEach(pkg => {
+      botePackages.forEach(pkg => {
         if (packageJson[depType][pkg]) {
           originalDeps[depType][pkg] = packageJson[depType][pkg];
         }
@@ -76,7 +76,7 @@ try {
   
   // 更新 dependencies 中的版本
   if (packageJson.dependencies) {
-    boteteamPackages.forEach(pkg => {
+    botePackages.forEach(pkg => {
       if (packageJson.dependencies[pkg]) {
         const oldDepVersion = packageJson.dependencies[pkg];
         packageJson.dependencies[pkg] = majorVersion;
@@ -88,7 +88,7 @@ try {
   
   // 更新 devDependencies 中的版本（如果有的话）
   if (packageJson.devDependencies) {
-    boteteamPackages.forEach(pkg => {
+    botePackages.forEach(pkg => {
       if (packageJson.devDependencies[pkg]) {
         const oldDepVersion = packageJson.devDependencies[pkg];
         packageJson.devDependencies[pkg] = majorVersion;
@@ -100,7 +100,7 @@ try {
   
   // 更新 peerDependencies 中的版本（如果有的话）
   if (packageJson.peerDependencies) {
-    boteteamPackages.forEach(pkg => {
+    botePackages.forEach(pkg => {
       if (packageJson.peerDependencies[pkg]) {
         const oldDepVersion = packageJson.peerDependencies[pkg];
         packageJson.peerDependencies[pkg] = majorVersion;

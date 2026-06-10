@@ -1,5 +1,5 @@
 {
-  "name": "@boteteam/a2ui-custom-kit",
+  "name": "@bote/a2ui-custom-kit",
   "version": "0.1.0",
   "description": "博特 A2UI 自定义组件开发框架与工具集",
   "module": "dist/esm/index.js",

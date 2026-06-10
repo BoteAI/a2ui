@@ -1,0 +1,36 @@
+import React, { useMemo } from 'react';
+import type { A2UIMessage } from '@bote/a2ui-render';
+import GalleryPlayground from '../shared/GalleryPlayground';
+import showcaseMessages from './mock/showcase.json';
+import { a2uiV9CustomComponents } from './remoteRegistry';
+import { V9_GALLERY_ITEMS, V9_REMOTE_SHOWCASE_ID, V9_CUSTOM_COMPONENTS_GUIDE_PATH } from './gallery';
+import type { GalleryItem } from '../shared/gallery';
+
+const REMOTE_SHOWCASE_ITEM: GalleryItem = {
+  id: V9_REMOTE_SHOWCASE_ID,
+  label: '自定义组件示例集',
+  description: '展示 4 个自定义组件：原生 DOM、React 桥接、Shadow 样式、Action 派发',
+  category: 'special',
+  messages: showcaseMessages as A2UIMessage[],
+  guidePath: V9_CUSTOM_COMPONENTS_GUIDE_PATH,
+};
+
+const A2UIPlaygroupV9: React.FC = () => {
+  const galleryItems = useMemo(
+    () => [REMOTE_SHOWCASE_ITEM, ...V9_GALLERY_ITEMS],
+    [],
+  );
+
+  return (
+    <GalleryPlayground
+      pageTitle="协议 v0.9"
+      protocolVersion="0.9"
+      galleryItems={galleryItems}
+      customComponents={a2uiV9CustomComponents}
+      peerPath="/a2ui-playgroup/v8"
+      peerLabel="协议 0.8"
+    />
+  );
+};
+
+export default A2UIPlaygroupV9;

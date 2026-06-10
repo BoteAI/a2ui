@@ -1,0 +1,126 @@
+[
+  {
+    "version": "v0.9",
+    "createSurface": {
+      "surfaceId": "a2ui-remote-showcase",
+      "catalogId": "https://a2ui.org/specification/v0_9/basic_catalog.json"
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateComponents": {
+      "surfaceId": "a2ui-remote-showcase",
+      "components": [
+        {
+          "id": "root",
+          "component": "Card",
+          "child": "main-column"
+        },
+        {
+          "id": "main-column",
+          "component": "Column",
+          "children": [
+            "page-title",
+            "page-desc",
+            "section-native",
+            "demo-native",
+            "section-react",
+            "demo-react",
+            "section-styled",
+            "demo-styled-purple",
+            "demo-styled-blue",
+            "section-action",
+            "demo-action"
+          ],
+          "justify": "start",
+          "align": "stretch"
+        },
+        {
+          "id": "page-title",
+          "component": "Text",
+          "text": "自定义组件示例集",
+          "variant": "h1"
+        },
+        {
+          "id": "page-desc",
+          "component": "Text",
+          "text": "涵盖 createNativeElement、createReactComponent、ensureComponentStyles、dispatchDeclaredAction 与 dispatchA2UIAction 四类开发模式",
+          "variant": "body"
+        },
+        {
+          "id": "section-native",
+          "component": "Text",
+          "text": "1. createNativeElement — 原生 DOM 标签",
+          "variant": "h3"
+        },
+        {
+          "id": "demo-native",
+          "component": "DemoNativeElement",
+          "label": "Native Element",
+          "tone": "success"
+        },
+        {
+          "id": "section-react",
+          "component": "Text",
+          "text": "2. createReactComponent — React 桥接组件",
+          "variant": "h3"
+        },
+        {
+          "id": "demo-react",
+          "component": "DemoReactComponent",
+          "title": "React 组件标题",
+          "subtitle": "副标题说明 createReactComponent 用法",
+          "align": "left"
+        },
+        {
+          "id": "section-styled",
+          "component": "Text",
+          "text": "3. ensureComponentStyles — Less 注入 Shadow 样式",
+          "variant": "h3"
+        },
+        {
+          "id": "demo-styled-purple",
+          "component": "DemoStyledPanel",
+          "title": "Purple Panel",
+          "description": "ensureComponentStyles 将 Less 编译 CSS 注入 ShadowRoot",
+          "variant": "purple"
+        },
+        {
+          "id": "demo-styled-blue",
+          "component": "DemoStyledPanel",
+          "title": "Blue Panel",
+          "description": "styleKey 保证同一 Shadow 内只注入一次",
+          "variant": "blue"
+        },
+        {
+          "id": "section-action",
+          "component": "Text",
+          "text": "4. dispatchDeclaredAction vs dispatchA2UIAction",
+          "variant": "h3"
+        },
+        {
+          "id": "demo-action",
+          "component": "DemoActionDispatch",
+          "label": "左键走协议 action，右键走代码派发",
+          "action": {
+            "event": {
+              "name": "demo_declared_action",
+              "context": {
+                "source": "showcase",
+                "via": "dispatchDeclaredAction"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "version": "v0.9",
+    "updateDataModel": {
+      "surfaceId": "a2ui-remote-showcase",
+      "path": "/",
+      "value": {}
+    }
+  }
+]

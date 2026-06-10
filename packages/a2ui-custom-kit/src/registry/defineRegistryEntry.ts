@@ -1,5 +1,5 @@
 import type { ComponentApi } from '../schema/webCoreV09Shim';
-import type { A2UICustomElementDefinition } from '@boteteam/types';
+import type { A2UICustomElementDefinition } from '../types/customRegistry';
 import { componentApiToJsonSchema2019 } from '../schema/defineComponentApi';
 
 export type DefineRegistryEntryOptions = {

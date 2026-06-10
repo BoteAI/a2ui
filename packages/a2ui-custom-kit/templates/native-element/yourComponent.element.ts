@@ -3,7 +3,7 @@ import {
   dispatchA2UIAction,
   readComponentProps,
   readStringProp,
-} from '@boteteam/a2ui-custom-kit';
+} from '@bote/a2ui-custom-kit';
 
 export const YourComponentElement = createNativeElement('YourComponentElement', {
   render(host) {

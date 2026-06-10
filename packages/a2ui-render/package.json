@@ -1,5 +1,5 @@
 {
-  "name": "@boteteam/a2ui-render",
+  "name": "@bote/a2ui-render",
   "version": "0.1.3",
   "description": "博特-A2UI 协议渲染引擎",
   "module": "dist/esm/index.js",

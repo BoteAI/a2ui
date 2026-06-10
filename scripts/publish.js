@@ -10,8 +10,8 @@ const rootDir = path.resolve(__dirname, '..');
 const PACKAGE_MAP = {
   'a2ui-render': 'packages/a2ui-render',
   'a2ui-custom-kit': 'packages/a2ui-custom-kit',
-  '@boteteam/a2ui-render': 'packages/a2ui-render',
-  '@boteteam/a2ui-custom-kit': 'packages/a2ui-custom-kit',
+  '@bote/a2ui-render': 'packages/a2ui-render',
+  '@bote/a2ui-custom-kit': 'packages/a2ui-custom-kit',
 };
 
 // ─── 参数解析 ───

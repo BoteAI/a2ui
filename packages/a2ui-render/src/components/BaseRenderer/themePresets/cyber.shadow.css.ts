@@ -3,6 +3,20 @@
  * 语义色见 A2UI_THEME_PRESET_DEFINITIONS.cyber.styleVars。
  */
 export const CYBER_THEME_SHADOW_CSS = `
+:host(a2ui-basic-column) {
+  --a2ui-color-on-surface: var(--a2ui-color-on-background, #f1f5f9);
+  gap: var(--a2ui-row-gap, 16px);
+}
+
+:host(a2ui-card) {
+  --a2ui-color-on-background: #f1f5f9;
+  --a2ui-color-on-surface: #f1f5f9;
+}
+
+:host(a2ui-basic-text) {
+  color: var(--_a2ui-text-color, var(--a2ui-color-on-surface, #f1f5f9));
+}
+
 :host(a2ui-basic-text) h1 {
   font-size: var(--a2ui-font-size-2xl, 24px);
   font-weight: 700;
@@ -18,10 +32,24 @@ export const CYBER_THEME_SHADOW_CSS = `
   color: transparent;
 }
 
+:host(a2ui-basic-text) h2,
+:host(a2ui-basic-text) h3,
+:host(a2ui-basic-text) h4,
+:host(a2ui-basic-text) h5 {
+  color: var(--a2ui-color-on-surface, #94a3b8);
+  font-weight: 600;
+}
+
 :host(a2ui-basic-text) p {
-  color: #94a3b8;
+  color: var(--a2ui-color-on-surface, #cbd5e1);
   font-size: 13px;
   line-height: 1.5;
+}
+
+:host(a2ui-basic-text) .a2ui-caption,
+:host(a2ui-basic-text) .a2ui-caption > *,
+:host(a2ui-basic-text) .a2ui-caption ::slotted(*) {
+  color: var(--a2ui-color-on-surface, #cbd5e1);
 }
 
 :host(a2ui-basic-row) > a2ui-basic-text .a2ui-caption {
@@ -173,6 +201,20 @@ export const CYBER_THEME_SHADOW_CSS = `
   box-sizing: border-box;
 }
 
+:host(a2ui-basic-button) .a2ui-button:not(.a2ui-button-primary):not(.a2ui-button-borderless) {
+  background: var(--a2ui-button-background, #1a2236);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: var(--a2ui-color-on-secondary, #e2e8f0);
+  --_a2ui-text-color: var(--a2ui-color-on-secondary, #e2e8f0);
+}
+
+:host(a2ui-basic-button) .a2ui-button.a2ui-button-borderless {
+  background: transparent;
+  border-color: transparent;
+  color: var(--a2ui-color-primary, #00e5ff);
+  --_a2ui-text-color: var(--a2ui-color-primary, #00e5ff);
+}
+
 :host(a2ui-basic-button) .a2ui-button.a2ui-button-primary,
 .a2ui-button.a2ui-button-primary {
   width: 100%;
@@ -185,6 +227,7 @@ export const CYBER_THEME_SHADOW_CSS = `
   );
   border: none;
   color: var(--a2ui-color-on-primary, #061018);
+  --_a2ui-text-color: var(--a2ui-color-on-primary, #061018);
   font-weight: 700;
   min-height: 50px;
   box-shadow:
@@ -212,9 +255,5 @@ export const CYBER_THEME_SHADOW_CSS = `
   backdrop-filter: blur(24px);
   margin: 0;
   max-width: 520px;
-}
-
-:host(a2ui-basic-column) {
-  gap: var(--a2ui-row-gap, 16px);
 }
 `;

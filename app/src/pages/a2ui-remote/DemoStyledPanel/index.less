@@ -1,0 +1,32 @@
+@prefix: demo-styled-panel;
+
+.@{prefix} {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #dcdde5;
+  background: #fff;
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2a2b33;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 12px;
+    color: #9092a3;
+  }
+
+  &--purple {
+    border-color: #722ed1;
+    background: linear-gradient(135deg, rgba(114, 46, 209, 0.08), #fff);
+  }
+
+  &--blue {
+    border-color: #417ffb;
+    background: linear-gradient(135deg, rgba(65, 127, 251, 0.08), #fff);
+  }
+}

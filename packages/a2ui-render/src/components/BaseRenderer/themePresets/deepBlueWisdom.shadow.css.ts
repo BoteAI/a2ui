@@ -3,25 +3,54 @@
  * 语义色见 A2UI_THEME_PRESET_DEFINITIONS.deepBlueWisdom.styleVars。
  */
 export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
+:host(a2ui-card) {
+  --a2ui-color-on-background: #1a1b22;
+  --a2ui-color-on-surface: #1a1b22;
+  --a2ui-text-caption-color: #414352;
+  --a2ui-color-on-secondary: #414352;
+  --a2ui-text-heading-color: #1a3d6e;
+  border: 2px solid rgba(50, 172, 255, 0.28);
+  background: #ffffff;
+  margin: 0;
+  max-width: 520px;
+  color: #1a1b22;
+}
+
+/* 深蓝底上的 Column 将标题/正文桥接为浅色；Card 内 on-background 已为深色 */
+:host(a2ui-basic-column) {
+  --a2ui-color-on-surface: var(--a2ui-color-on-background, #e8eef7);
+  --a2ui-text-heading-color: var(--a2ui-color-on-background, #e8eef7);
+  gap: var(--a2ui-row-gap, 16px);
+}
+
+:host(a2ui-basic-text) {
+  color: #1a1b22;
+}
+
 :host(a2ui-basic-text) h1 {
   font-size: var(--a2ui-font-size-2xl, 24px);
   font-weight: 700;
   line-height: 1.25;
-  background: linear-gradient(
-    120deg,
-    var(--a2ui-color-primary, #32acff) 0%,
-    #457aff 47%,
-    #ac8cff 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #1a3d6e;
+}
+
+:host(a2ui-basic-text) h2,
+:host(a2ui-basic-text) h3,
+:host(a2ui-basic-text) h4,
+:host(a2ui-basic-text) h5 {
+  font-weight: 600;
 }
 
 :host(a2ui-basic-text) p {
-  color: #9092a3;
+  color: var(--a2ui-color-on-surface, #2a2b33);
   font-size: 13px;
   line-height: 1.5;
+}
+
+:host(a2ui-basic-text) .a2ui-caption,
+:host(a2ui-basic-text) .a2ui-caption > *,
+:host(a2ui-basic-text) .a2ui-caption ::slotted(*) {
+  color: var(--a2ui-color-on-surface, #2a2b33);
 }
 
 :host(a2ui-basic-row) > a2ui-basic-text .a2ui-caption {
@@ -30,7 +59,7 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   border-radius: 999px;
   border: 1px solid rgba(50, 172, 255, 0.45);
   background: rgba(50, 172, 255, 0.1);
-  color: #32acff;
+  color: #1565a8;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -42,7 +71,7 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   margin-top: 10px;
   border: none;
   background: transparent;
-  color: rgba(144, 146, 163, 0.9);
+  color: var(--a2ui-color-on-surface, #2a2b33);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: normal;
@@ -52,7 +81,7 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
 :host(a2ui-basic-textfield) > label,
 :host(a2ui-datetimeinput) > label,
 :host(a2ui-choicepicker) > label {
-  color: #9092a3;
+  color: var(--a2ui-color-on-input, #414352);
   font-size: var(--a2ui-label-font-size, 11px);
   font-weight: 600;
 }
@@ -65,7 +94,7 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   border-color: rgba(50, 172, 255, 0.22);
   min-height: 44px;
   background-color: #ffffff;
-  color: #414352;
+  color: #2a2b33;
 }
 
 :host(a2ui-basic-textfield) .a2ui-textfield:focus,
@@ -118,11 +147,11 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   justify-content: center;
   padding: var(--a2ui-choicepicker-chip-padding, 10px 12px);
   border-radius: var(--a2ui-choicepicker-chip-border-radius, 12px);
-  border: 1px solid rgba(144, 146, 163, 0.25);
+  border: 1px solid rgba(100, 103, 122, 0.35);
   background: #eef4fc;
-  color: #9092a3;
+  color: var(--a2ui-color-on-secondary, #414352);
   font-size: var(--a2ui-font-size-s, 12px);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 :host(a2ui-choicepicker) .chip.selected {
@@ -132,7 +161,7 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
     rgba(172, 140, 255, 0.22) 100%
   );
   border-color: var(--a2ui-color-primary, #32acff);
-  color: #2a2b33;
+  color: #1a1b22;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(50, 172, 255, 0.12);
 }
@@ -148,19 +177,13 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   border-color: var(--a2ui-color-primary, #32acff);
 }
 
-/* displayStyle=checkbox：选项在深蓝底上须用浅色字，避免与 #0a1628 背景对比不足 */
 :host(a2ui-choicepicker) .options:not(.chips) label {
   display: flex;
   align-items: center;
   gap: var(--a2ui-checkbox-gap, 10px);
-  color: var(--a2ui-color-on-background, #e8eef7);
+  color: var(--a2ui-color-on-surface, #e8eef7);
   font-size: 13px;
   line-height: 1.4;
-}
-
-/* 白卡片内 checkbox/radio 选项恢复深色字 */
-:host(a2ui-card) a2ui-choicepicker .options:not(.chips) label {
-  color: var(--a2ui-color-on-input, #414352);
 }
 
 :host(a2ui-choicepicker) .options input[type='radio'],
@@ -190,6 +213,20 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   box-sizing: border-box;
 }
 
+:host(a2ui-basic-button) .a2ui-button:not(.a2ui-button-primary):not(.a2ui-button-borderless) {
+  background: var(--a2ui-button-background, #ffffff);
+  border: 1px solid rgba(50, 172, 255, 0.22);
+  color: var(--a2ui-color-on-input, #414352);
+  --_a2ui-text-color: var(--a2ui-color-on-input, #414352);
+}
+
+:host(a2ui-basic-button) .a2ui-button.a2ui-button-borderless {
+  background: transparent;
+  border-color: transparent;
+  color: var(--a2ui-color-primary, #32acff);
+  --_a2ui-text-color: var(--a2ui-color-primary, #32acff);
+}
+
 :host(a2ui-basic-button) .a2ui-button.a2ui-button-primary,
 .a2ui-button.a2ui-button-primary {
   width: 100%;
@@ -202,6 +239,7 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   );
   border: none;
   color: var(--a2ui-color-on-primary, #ffffff);
+  --_a2ui-text-color: var(--a2ui-color-on-primary, #ffffff);
   font-weight: 700;
   min-height: 50px;
   box-shadow: 0 4px 20px rgba(50, 172, 255, 0.35);
@@ -213,16 +251,5 @@ export const DEEP_BLUE_WISDOM_THEME_SHADOW_CSS = `
   background: linear-gradient(120deg, #5bbcff 0%, rgba(96, 140, 255, 0.9) 47%, #e5a8ff 100%);
   box-shadow: 0 6px 28px rgba(172, 140, 255, 0.35);
   transform: translateY(-1px);
-}
-
-:host(a2ui-card) {
-  border: 2px solid rgba(50, 172, 255, 0.28);
-  background: #ffffff;
-  margin: 0;
-  max-width: 520px;
-}
-
-:host(a2ui-basic-column) {
-  gap: var(--a2ui-row-gap, 16px);
 }
 `;

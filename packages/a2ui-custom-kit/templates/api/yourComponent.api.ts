@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { defineComponentApi, DynString } from '@boteteam/a2ui-custom-kit';
+import { defineComponentApi, DynString } from '@bote/a2ui-custom-kit';
 
 /** 替换 YourComponent 为实际组件名，与协议 JSON component 字段一致 */
 export const YourComponentApi = defineComponentApi({

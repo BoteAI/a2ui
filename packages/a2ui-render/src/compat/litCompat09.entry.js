@@ -41,6 +41,12 @@ const v09PendingCustomApis = [];
 /** Playground 等环境使用的简写；空值视为选用当前合并后的 basic 目录 */
 const V09_BASIC_CATALOG_ID_ALIASES = new Set(['standard', 'default', 'basic']);
 
+/** 官方 spec / Composer Gallery 中可能出现的 basic catalog URL，统一映射到运行时 basicCatalog.id */
+const V09_BASIC_CATALOG_URL_SUFFIXES = [
+  '/catalogs/basic/catalog.json',
+  '/basic_catalog.json',
+];
+
 /**
  * @param {unknown} raw
  * @returns {string}
@@ -50,6 +56,10 @@ function resolveV09CatalogId(raw) {
   const s = String(raw).trim();
   if (s === '') return basicCatalog.id;
   if (V09_BASIC_CATALOG_ID_ALIASES.has(s.toLowerCase())) return basicCatalog.id;
+  if (s === basicCatalog.id) return basicCatalog.id;
+  if (V09_BASIC_CATALOG_URL_SUFFIXES.some((suffix) => s.endsWith(suffix))) {
+    return basicCatalog.id;
+  }
   return s;
 }
 

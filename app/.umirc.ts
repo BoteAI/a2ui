@@ -1,6 +1,5 @@
 import path from 'path';
 import { defineConfig } from 'umi';
-import theme from '@boteteam/theme/bin/default/theme.json';
 import routes from './src/config/routes';
 import Config from 'webpack-chain';
 
@@ -24,7 +23,9 @@ export default defineConfig({
   devServer: {
     compress: false,
   },
-  theme,
+  theme: {
+    'primary-color': '#417ffb',
+  },
   routes,
   mock: {
     exclude: ['mock/**/_*.js', 'mock/_*/**/*.js', 'mock/**/*.json'],
@@ -46,29 +47,6 @@ export default defineConfig({
       '@a2ui/web_core/v0_9',
       path.resolve(__dirname, '../scripts/a2ui-web-core-v09-webpack4-shim.js')
     );
-
-    config.module
-      .rule('lessMapCss')
-      .test(/\.less$/)
-      .exclude.add(/node_modules/)
-      .end()
-      .include.add(path.resolve(__dirname, 'src'))
-      .end()
-      .oneOf('normal')
-      .use('less-loader')
-      .loader('less-loader')
-      .options({
-        lessOptions: {
-          javascriptEnabled: true,
-        },
-      })
-      .end()
-      .use('sass-resources-loader')
-      .loader(require.resolve('sass-resources-loader'))
-      .options({
-        resources: [path.resolve(__dirname, 'src/assets/theme/themeMap.less')],
-      })
-      .end();
 
     config
       .plugin('antd-dayjs-webpack-plugin')

@@ -65,6 +65,61 @@ function applyMultipleChoicePatches(patched) {
   return nextPatched;
 }
 
+/** v0.9：组件引用缺失或消息不完整时不抛错，跳过该节点渲染 */
+function applyV09GracefulRenderPatches(patched) {
+  let nextPatched = patched;
+
+  // Patch GR-1：renderNode 捕获 ComponentContext 创建失败，返回 Lit nothing
+  nextPatched = nextPatched.replace(
+    `    renderNode(childRef, customPath) {
+      if (!childRef)
+        return A;
+      let model = childRef;
+      const { surface, path: parentPath } = this.context.dataContext;
+      let path = customPath;
+      if (typeof childRef === "object" && childRef !== null && childRef.id && !childRef.type) {
+        model = childRef.id;
+        path = path != null ? path : childRef.basePath;
+      }
+      path = path != null ? path : parentPath;
+      return renderA2uiNode(new ComponentContext(surface, model, path), surface.catalog);
+    }`,
+    `    renderNode(childRef, customPath) {
+      if (!childRef)
+        return A;
+      let model = childRef;
+      const { surface, path: parentPath } = this.context.dataContext;
+      let path = customPath;
+      if (typeof childRef === "object" && childRef !== null && childRef.id && !childRef.type) {
+        model = childRef.id;
+        path = path != null ? path : childRef.basePath;
+      }
+      path = path != null ? path : parentPath;
+      try {
+        const ctx = new ComponentContext(surface, model, path);
+        return renderA2uiNode(ctx, surface.catalog);
+      } catch (err) {
+        console.warn("[A2UI] Skip missing child component:", model, err);
+        return A;
+      }
+    }`,
+  );
+
+  // Patch GR-2：surface 根节点缺失时静默跳过
+  nextPatched = nextPatched.replace(
+    `      } catch (e11) {
+        console.error("Error creating root context:", e11);
+        return b3\`<div>Error rendering surface</div>\`;
+      }`,
+    `      } catch (e11) {
+        console.warn("[A2UI] Skip surface root render:", e11);
+        return A;
+      }`,
+  );
+
+  return nextPatched;
+}
+
 /* eslint-disable no-template-curly-in-string */
 /** v0.9 等分支不再包含该锚点，需在 I18N-1 后做兜底 prepend，否则 ChoicePicker 等会引用未定义的 __a2uiI18nText */
 const A2UI_I18N_HELPERS = `function __a2uiI18nText(key) {
@@ -367,6 +422,7 @@ var _A2uiMessageProcessor = class _A2uiMessageProcessor {`,
     .replace(/Object\.values\(([A-Za-z_$][\w$]*)\)/g, 'Object.values($1 || {})');
   patched09 = applyI18nPatches(patched09);
   patched09 = applyMultipleChoicePatches(patched09);
+  patched09 = applyV09GracefulRenderPatches(patched09);
   fs.writeFileSync(outfile09, patched09, 'utf8');
 }
 

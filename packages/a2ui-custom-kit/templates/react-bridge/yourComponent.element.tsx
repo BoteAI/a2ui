@@ -1,5 +1,5 @@
 import React from 'react';
-import { createReactComponent } from '@boteteam/a2ui-custom-kit';
+import { createReactComponent } from '@bote/a2ui-custom-kit';
 import { YourComponentApi } from '../api/yourComponent.api';
 
 export const YourComponentElement = createReactComponent(YourComponentApi, ({ props }) => {
