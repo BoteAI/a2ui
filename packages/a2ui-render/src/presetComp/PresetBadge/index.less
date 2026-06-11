@@ -1,0 +1,39 @@
+@import (reference) '../../assets/theme/less/theme.less';
+
+@prefix: preset-badge;
+
+.@{prefix} {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+
+  &--success {
+    color: #065f46;
+    background: #d1fae5;
+  }
+
+  &--warning {
+    color: #92400e;
+    background: #fef3c7;
+  }
+
+  &--error {
+    color: #991b1b;
+    background: #fee2e2;
+  }
+
+  &--info {
+    color: #1e40af;
+    background: #dbeafe;
+  }
+
+  &--neutral {
+    color: #374151;
+    background: #f3f4f6;
+  }
+}

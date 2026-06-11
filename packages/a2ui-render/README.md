@@ -146,6 +146,31 @@ const customComponents: A2UICustomComponentRegistry = {
 | `inferProtocolVersionFromMessages` | 自动推断 v0.8 / v0.9 |
 | `useResponsive` / `isMobile` 等 | 响应式工具 |
 | `A2UIMessage` / `A2UICustomComponentRegistry` 等 | 类型定义（本包自带，无需 `@boteai/types`） |
+| `presetComponentRegistry` | 内置 Preset 组件注册表，可直接传给 `BaseRenderer.customComponents` |
+| `presetSchemas` | 内置 Preset 组件 JSON Schema（agent 格式），供配置器 / codegen 使用 |
+
+### 内置 Preset 组件（直接 import）
+
+```tsx
+import {
+  BaseRenderer,
+  presetComponentRegistry,
+  presetSchemas,
+} from '@bote/a2ui-render';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={presetComponentRegistry}
+  onAction={handleAction}
+/>
+```
+
+新增 Preset：在 `src/preset/` 下按模板添加组件目录，并在 `src/preset/manifest.ts` 登记后执行 `yarn build`。
+
+Node 脚本（如配置器 codegen）仅需 schema 时，请使用子路径 `@bote/a2ui-render/preset-schemas`，避免加载渲染器侧的样式资源。
+
+仅需注册表、且需避免与页面代码打包后变量名冲突时，可使用 `@bote/a2ui-render/preset-registry`。
 
 ---
 

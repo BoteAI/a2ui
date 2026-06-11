@@ -1,0 +1,48 @@
+@import (reference) '../../assets/theme/less/theme.less';
+
+@prefix: preset-metric;
+
+.@{prefix} {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6b7280;
+  }
+
+  &__value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  &__value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #111827;
+  }
+
+  &__trend {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &--up {
+      color: #059669;
+    }
+
+    &--down {
+      color: #dc2626;
+    }
+
+    &--neutral {
+      color: #6b7280;
+    }
+  }
+}

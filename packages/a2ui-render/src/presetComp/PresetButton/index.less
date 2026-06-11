@@ -1,0 +1,52 @@
+@import (reference) '../../assets/theme/less/theme.less';
+
+@prefix: preset-button;
+
+.@{prefix} {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  line-height: 1.4;
+
+  &--primary {
+    color: #fff;
+    background: #3b82f6;
+
+    &:hover {
+      background: #2563eb;
+    }
+  }
+
+  &--secondary {
+    color: #374151;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+
+  &--ghost {
+    color: #374151;
+    background: transparent;
+
+    &:hover {
+      background: #f3f4f6;
+    }
+  }
+
+  &--done {
+    color: #059669;
+    background: #d1fae5;
+    cursor: default;
+  }
+}

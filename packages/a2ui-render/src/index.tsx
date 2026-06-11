@@ -78,3 +78,11 @@ export {
   loadRemoteA2UICustomRegistry,
   loadRemoteA2UICustomRegistries,
 } from './remote/loadRemoteA2UICustomRegistry';
+
+export { useRemoteA2UICustomRegistry } from './remote/useRemoteA2UICustomRegistry';
+export type { RemoteA2UIRegistryState } from './remote/useRemoteA2UICustomRegistry';
+
+// 预设组件（Preset）导出
+export { a2uiPresetComponentRegistry } from './presetComp/registry';
+export { a2uiPresetComponentSchemas } from './presetComp/presetSchemas';
+export type { a2uiPresetComponentName } from './presetComp/manifest';

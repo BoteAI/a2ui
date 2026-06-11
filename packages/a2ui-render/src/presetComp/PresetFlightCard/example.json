@@ -1,0 +1,20 @@
+{
+  "component": "PresetFlightCard",
+  "id": "flight-1",
+  "airline": "Delta Airlines",
+  "flightNumber": "DL 2402",
+  "origin": "SFO",
+  "destination": "JFK",
+  "date": "Mon, Jun 28",
+  "departureTime": "8:30 AM",
+  "arrivalTime": "2:45 PM",
+  "duration": "6h 15m",
+  "status": "On Time",
+  "statusColor": "#059669",
+  "price": "$384",
+  "action": {
+    "event": {
+      "name": "on_book_flight"
+    }
+  }
+}

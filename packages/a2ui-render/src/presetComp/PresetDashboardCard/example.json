@@ -1,0 +1,7 @@
+{
+  "component": "PresetDashboardCard",
+  "id": "card-1",
+  "title": { "path": "/data/card/title" },
+  "subtitle": "Q2 2026",
+  "children": ["metric-1"]
+}

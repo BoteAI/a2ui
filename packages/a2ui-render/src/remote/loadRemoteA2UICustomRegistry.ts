@@ -1,6 +1,6 @@
 import type { A2UICustomComponentRegistry, A2UICustomElementDefinition } from '../types';
 
-const DEFAULT_EXPORT_KEYS = ['a2uiRemoteRegistry', 'a2uiCustomRegistry', 'registry'] as const;
+const DEFAULT_EXPORT_KEYS = ['a2uiRemoteRegistry', 'a2uiCustomRegistry', 'allCustomComponents', 'registry'] as const;
 
 function isCustomElementConstructor(v: unknown): v is CustomElementConstructor {
   return typeof v === 'function' && v.prototype instanceof HTMLElement;

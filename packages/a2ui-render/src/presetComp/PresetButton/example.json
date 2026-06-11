@@ -1,0 +1,10 @@
+{
+  "component": "PresetButton",
+  "id": "btn-1",
+  "variant": "primary",
+  "action": {
+    "event": {
+      "name": "on_confirm"
+    }
+  }
+}

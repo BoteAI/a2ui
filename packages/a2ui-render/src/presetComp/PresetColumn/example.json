@@ -1,0 +1,6 @@
+{
+  "component": "PresetColumn",
+  "id": "col-1",
+  "gap": 12,
+  "children": ["title-1", "metric-1"]
+}

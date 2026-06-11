@@ -1,0 +1,3 @@
+/* eslint-disable max-len */
+/** 由 scripts/embedPresetStyles.js 从 PresetDashboardCard/index.less 生成，请勿手改 */
+export default ".preset-dashboard-card {\n  display: flex;\n  flex-direction: column;\n  border-radius: 12px;\n  border: 1px solid #e5e7eb;\n  background: #fff;\n  padding: 20px;\n  box-sizing: border-box;\n}\n.preset-dashboard-card__header {\n  margin-bottom: 16px;\n}\n.preset-dashboard-card__title {\n  font-size: 15px;\n  font-weight: 600;\n  color: #111827;\n  line-height: 1.4;\n}\n.preset-dashboard-card__subtitle {\n  font-size: 12px;\n  color: #6b7280;\n  margin-top: 2px;\n}\n.preset-dashboard-card__body {\n  flex: 1;\n}\n";

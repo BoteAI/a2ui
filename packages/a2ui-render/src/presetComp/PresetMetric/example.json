@@ -1,0 +1,8 @@
+{
+  "component": "PresetMetric",
+  "id": "metric-1",
+  "label": { "path": "/data/metric/label" },
+  "value": { "path": "/data/metric/value" },
+  "trend": "up",
+  "trendValue": "+8.2%"
+}

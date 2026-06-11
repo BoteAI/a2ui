@@ -1,0 +1,8 @@
+{
+  "component": "PresetBarChart",
+  "id": "bar-1",
+  "data": { "path": "/data/bar" },
+  "color": "#3b82f6",
+  "valuePrefix": "$",
+  "valueSuffix": "k"
+}

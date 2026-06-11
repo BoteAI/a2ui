@@ -44,6 +44,19 @@ export function resolveBoundValue(host: A2UICustomElementHost, raw: unknown): st
   }
 }
 
+/** 与 resolveBoundValue 类似，但保留原始类型（数组、对象等），不会强制转 string */
+export function resolveBoundValueRaw(host: A2UICustomElementHost, raw: unknown): unknown {
+  const dc = host.context?.dataContext;
+  if (!dc || typeof dc.resolveDynamicValue !== 'function' || raw == null) return raw;
+  try {
+    const resolved = dc.resolveDynamicValue(raw);
+    return resolved ?? raw;
+  } catch {
+    return raw;
+  }
+}
+
+
 export function writeBoundValue(host: A2UICustomElementHost, raw: unknown, value: unknown): void {
   const path = readBoundPath(raw);
   const dc = host.context?.dataContext;

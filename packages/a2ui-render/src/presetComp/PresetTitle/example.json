@@ -1,0 +1,6 @@
+{
+  "component": "PresetTitle",
+  "id": "title-1",
+  "text": { "path": "/data/title" },
+  "level": "h1"
+}
