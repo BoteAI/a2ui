@@ -35,10 +35,10 @@ console.log(`[build-a2ui-esm] react-runtime → ${kitReactRuntime}`);
 const kitSubpathPlugin = {
   name: 'a2ui-kit-subpath',
   setup(build) {
-    build.onResolve({ filter: /^@bote\/a2ui-custom-kit\/remote-runtime$/ }, () => ({
+    build.onResolve({ filter: /^@boteai\/a2ui-custom-kit\/remote-runtime$/ }, () => ({
       path: kitRemoteRuntime,
     }));
-    build.onResolve({ filter: /^@bote\/a2ui-custom-kit\/react-runtime$/ }, () => ({
+    build.onResolve({ filter: /^@boteai\/a2ui-custom-kit\/react-runtime$/ }, () => ({
       path: kitReactRuntime,
     }));
   },

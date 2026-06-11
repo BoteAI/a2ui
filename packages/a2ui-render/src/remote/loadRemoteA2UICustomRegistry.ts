@@ -60,7 +60,7 @@ export async function loadRemoteA2UICustomRegistry(
           '远程脚本内含 require。',
           'lingxi 的 yarn build:remote 会产出 commonjs 且 @lingxiteam/cli 的 webpack 会强制将 react、react-dom 设为 external，无法用浏览器原生 import 加载。',
           '请在 remote-comp 执行 yarn build:a2ui-esm，使用生成的 public/*.mjs 的 URL（一组件一个文件）。',
-          '详见 @bote/a2ui-custom-kit 的 REMOTE_ESM_DEVELOPMENT.md 第 2.5 节。',
+          '详见 @boteai/a2ui-custom-kit 的 REMOTE_ESM_DEVELOPMENT.md 第 2.5 节。',
           `原始错误：${msg}`,
         ].join(' '),
       );

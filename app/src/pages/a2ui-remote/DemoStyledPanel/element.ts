@@ -5,7 +5,7 @@
  * - ensureComponentStyles(host, styleKey, css) 将 Less 编译后的 CSS 注入 ShadowRoot
  * - styleKey 保证同一 Shadow 内只注入一次，避免重复 style 标签
  */
-import { createNativeElement, ensureComponentStyles, readComponentProps, readStringProp } from '@bote/a2ui-custom-kit';
+import { createNativeElement, ensureComponentStyles, readComponentProps, readStringProp } from '@boteai/a2ui-custom-kit';
 import { DemoStyledPanelApi } from './api';
 import styles from './index.less';
 

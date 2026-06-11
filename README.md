@@ -4,7 +4,7 @@
 
 English | [中文](./README.zh-CN.md) · **Repository**: [github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
 
-> This project is under active development. `@bote/a2ui-render` and `@bote/a2ui-custom-kit` are being prepared for open source. Feedback and contributions are welcome.
+> This project is under active development. `@boteai/a2ui-render` and `@boteai/a2ui-custom-kit` are being prepared for open source. Feedback and contributions are welcome.
 
 ---
 
@@ -33,7 +33,7 @@ Open in your browser:
 
 Alternatively: `cd app && yarn dev` — same as `yarn start` from the repo root.
 
-While developing packages, run `yarn watch` in another terminal to rebuild `@bote/a2ui-render` and `@bote/a2ui-custom-kit` on change.
+While developing packages, run `yarn watch` in another terminal to rebuild `@boteai/a2ui-render` and `@boteai/a2ui-custom-kit` on change.
 
 ---
 
@@ -53,10 +53,10 @@ When an AI Agent or backend sends **A2UI protocol messages** (structured JSON de
 Agent / Backend
       │  A2UI messages JSON
       ▼
-@bote/a2ui-render          ← protocol renderer (React + Lit surface)
+@boteai/a2ui-render          ← protocol renderer (React + Lit surface)
       │  customComponents registry
       ▼
-@bote/a2ui-custom-kit      ← define, register, bundle custom components
+@boteai/a2ui-custom-kit      ← define, register, bundle custom components
       │
       ▼
 Your business UI (local bundle or remote .mjs)
@@ -68,8 +68,8 @@ Your business UI (local bundle or remote .mjs)
 
 | Package | npm | Role |
 |---------|-----|------|
-| **a2ui-render** | `@bote/a2ui-render` | A2UI v0.8 / v0.9 protocol renderer |
-| **a2ui-custom-kit** | `@bote/a2ui-custom-kit` | Custom component authoring toolkit |
+| **a2ui-render** | `@boteai/a2ui-render` | A2UI v0.8 / v0.9 protocol renderer |
+| **a2ui-custom-kit** | `@boteai/a2ui-custom-kit` | Custom component authoring toolkit |
 
 This repo also ships a **Playground app** under `app/` for browsing demos, editing JSON, and validating custom components — not published to npm.
 
@@ -82,7 +82,7 @@ This repo also ships a **Playground app** under `app/` for browsing demos, editi
 `BaseRenderer` accepts an array of A2UI messages and renders a fully interactive surface. Supports **protocol v0.8 and v0.9**, automatic version inference, responsive helpers, and declarative action callbacks.
 
 ```tsx
-import { BaseRenderer, type A2UIMessage } from '@bote/a2ui-render';
+import { BaseRenderer, type A2UIMessage } from '@boteai/a2ui-render';
 
 <BaseRenderer
   messages={messages}
@@ -110,7 +110,7 @@ See [`packages/a2ui-render/styleVars.md`](./packages/a2ui-render/styleVars.md) f
 
 ### 3. Custom Components — Two Integration Paths
 
-When protocol messages reference **your own component names**, register implementations via `@bote/a2ui-custom-kit`:
+When protocol messages reference **your own component names**, register implementations via `@boteai/a2ui-custom-kit`:
 
 | Path | When to use | Output |
 |------|-------------|--------|
@@ -129,7 +129,7 @@ import {
   createReactComponent,
   defineRegistryEntry,
   mergeRegistryEntries,
-} from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-custom-kit';
 
 const api = defineComponentApi({ name: 'MyCard', shape: { title: z.string() } });
 const element = createReactComponent(({ title }) => <div>{title}</div>);
@@ -139,7 +139,7 @@ const registry = mergeRegistryEntries(defineRegistryEntry({ api, element }));
 **Remote flow**
 
 ```ts
-import { loadRemoteA2UICustomRegistry, mergeRegistryEntries } from '@bote/a2ui-render';
+import { loadRemoteA2UICustomRegistry, mergeRegistryEntries } from '@boteai/a2ui-render';
 
 const remote = await loadRemoteA2UICustomRegistry(
   'https://cdn.example.com/custom-components.mjs',
@@ -167,7 +167,7 @@ See [Try the Playground](#try-the-playground) for how to start the app locally.
 
 ### 5. Roadmap — SDK Extension Components
 
-The official A2UI catalog covers core layout and input primitives. We plan to ship **additional built-in components inside `@bote/a2ui-render`** — such as data tables, carousels, and rich text — to fill common product gaps without requiring every integrator to build them from scratch.
+The official A2UI catalog covers core layout and input primitives. We plan to ship **additional built-in components inside `@boteai/a2ui-render`** — such as data tables, carousels, and rich text — to fill common product gaps without requiring every integrator to build them from scratch.
 
 Planned categories include data display, rich content, and domain-specific widgets. Contributions and RFCs are welcome via Issues.
 
@@ -183,14 +183,14 @@ Planned categories include data display, rich content, and domain-specific widge
                            │ JSON
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  @bote/a2ui-render                                           │
+│  @boteai/a2ui-render                                           │
 │  BaseRenderer → LitSurfaceHost → @a2ui/lit Web Components  │
 │  · theme presets · onAction · remote registry merge          │
 └──────────────────────────┬──────────────────────────────────┘
                            │ component name lookup
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  @bote/a2ui-custom-kit                                       │
+│  @boteai/a2ui-custom-kit                                       │
 │  defineComponentApi · createReactComponent / createNative   │
 │  defineRegistryEntry · mergeRegistryEntries · remote ESM   │
 └─────────────────────────────────────────────────────────────┘
@@ -198,7 +198,7 @@ Planned categories include data display, rich content, and domain-specific widge
 
 **Which package do I need?**
 
-- **Standard A2UI components only** → `@bote/a2ui-render`
+- **Standard A2UI components only** → `@boteai/a2ui-render`
 - **Custom components in-app** → both packages; kit produces registry, render consumes it
 - **Custom components as remote scripts** → kit for authoring + render's `loadRemoteA2UICustomRegistry` at runtime
 
@@ -209,16 +209,16 @@ Planned categories include data display, rich content, and domain-specific widge
 ### Install
 
 ```bash
-yarn add @bote/a2ui-render
+yarn add @boteai/a2ui-render
 
 # if you need custom components
-yarn add @bote/a2ui-custom-kit
+yarn add @boteai/a2ui-custom-kit
 ```
 
 ### Minimal render
 
 ```tsx
-import { BaseRenderer } from '@bote/a2ui-render';
+import { BaseRenderer } from '@boteai/a2ui-render';
 
 export function AgentPanel({ messages }) {
   return (
@@ -235,7 +235,7 @@ export function AgentPanel({ messages }) {
 ### With custom components
 
 ```tsx
-import { BaseRenderer } from '@bote/a2ui-render';
+import { BaseRenderer } from '@boteai/a2ui-render';
 import { myCustomRegistry } from './my-custom-registry';
 
 <BaseRenderer
@@ -250,7 +250,7 @@ import { myCustomRegistry } from './my-custom-registry';
 
 ## API Highlights
 
-### `@bote/a2ui-render`
+### `@boteai/a2ui-render`
 
 | Export | Description |
 |--------|-------------|
@@ -263,7 +263,7 @@ import { myCustomRegistry } from './my-custom-registry';
 | `inferProtocolVersionFromMessages` | Auto-detect v0.8 vs v0.9 |
 | `useResponsive` / `isMobile` | Responsive utilities |
 
-### `@bote/a2ui-custom-kit`
+### `@boteai/a2ui-custom-kit`
 
 | Export | Description |
 |--------|-------------|

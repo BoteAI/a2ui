@@ -49,7 +49,7 @@
 import {
   BaseRenderer,
   DEFAULT_A2UI_LIT_STYLE_VARS,
-} from '@bote/a2ui-render';
+} from '@boteai/a2ui-render';
 
 <BaseRenderer
   protocolVersion="0.9"

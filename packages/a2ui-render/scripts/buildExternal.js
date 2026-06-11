@@ -37,7 +37,7 @@ if (!versionRegex.test(version)) {
 }
 
 const packageJsonPath = path.resolve(__dirname, '../package.json');
-const botePackages = ['@bote/icons', '@bote/theme', '@bote/types', '@bote/utils'];
+const botePackages = ['@boteai/icons', '@boteai/theme', '@boteai/types', '@boteai/utils'];
 
 console.log('🚀 开始构建外部包...');
 console.log(`📦 目标版本: ${version}`);

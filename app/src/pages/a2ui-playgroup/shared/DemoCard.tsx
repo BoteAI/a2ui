@@ -4,8 +4,8 @@ import {
   BaseRenderer,
   type A2UIMessage,
   type A2UIThemePreset,
-} from '@bote/a2ui-render';
-import type { A2UICustomComponentRegistry } from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-render';
+import type { A2UICustomComponentRegistry } from '@boteai/a2ui-custom-kit';
 import type { GalleryItem } from './gallery';
 import { navigateTo, openGuideUrl } from './navigate';
 import styles from './index.less';

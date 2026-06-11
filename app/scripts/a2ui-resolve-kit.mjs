@@ -6,7 +6,7 @@ function readKitRootFromPackageJson(root) {
   const pkgPath = path.join(root, 'package.json');
   if (!fs.existsSync(pkgPath)) return null;
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-  const spec = pkg.dependencies?.['@bote/a2ui-custom-kit'];
+  const spec = pkg.dependencies?.['@boteai/a2ui-custom-kit'];
   if (typeof spec === 'string' && spec.startsWith('file:')) {
     const kitRoot = path.resolve(root, spec.slice('file:'.length));
     if (fs.existsSync(kitRoot)) return kitRoot;
@@ -18,7 +18,7 @@ function resolveKitSubpathEntryImpl(root, subpath) {
   const entryRel = `dist/esm/${subpath}/index.js`;
   const candidates = [
     readKitRootFromPackageJson(root),
-    path.join(root, 'node_modules/@bote/a2ui-custom-kit'),
+    path.join(root, 'node_modules/@boteai/a2ui-custom-kit'),
     path.resolve(root, '../packages/a2ui-custom-kit'),
   ]
     .filter(Boolean)
@@ -29,7 +29,7 @@ function resolveKitSubpathEntryImpl(root, subpath) {
   }
 
   throw new Error(
-    `未找到 @bote/a2ui-custom-kit/${subpath}。请先：cd packages/a2ui-custom-kit && yarn build`,
+    `未找到 @boteai/a2ui-custom-kit/${subpath}。请先：cd packages/a2ui-custom-kit && yarn build`,
   );
 }
 

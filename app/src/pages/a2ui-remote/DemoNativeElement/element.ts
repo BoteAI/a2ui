@@ -5,7 +5,7 @@
  * - 用 readComponentProps / readStringProp 读取协议 props
  * - connectedCallback 与 props 更新由 kit 自动订阅，无需手写
  */
-import { createNativeElement, readComponentProps, readStringProp } from '@bote/a2ui-custom-kit';
+import { createNativeElement, readComponentProps, readStringProp } from '@boteai/a2ui-custom-kit';
 import { DemoNativeElementApi } from './api';
 
 const PREFIX = 'demo-native-element';

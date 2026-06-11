@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import type { A2UIMessage } from '@bote/a2ui-render';
+import type { A2UIMessage } from '@boteai/a2ui-render';
 import GalleryPlayground from '../shared/GalleryPlayground';
 import showcaseMessages from './mock/showcase.json';
 import { a2uiV9CustomComponents } from './remoteRegistry';

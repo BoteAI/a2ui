@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
-    "@bote/a2ui-custom-kit": "0.1.0",
-    "@bote/a2ui-render": "0.1.3",
+    "@boteai/a2ui-custom-kit": "0.1.0",
+    "@boteai/a2ui-render": "0.1.3",
     "antd": "4.24.14",
     "antd-dayjs-webpack-plugin": "^1.0.6",
     "react": "17.x",

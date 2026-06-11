@@ -20,14 +20,14 @@ yarn build:a2ui-esm
 ```
 
 - 多入口在 **`a2ui-esm.config.mjs`** 的 **`entries`** 配置。
-- 业务代码请 **`import from '@bote/a2ui-custom-kit/remote-runtime'`**（勿用主入口，避免打进 React）。
+- 业务代码请 **`import from '@boteai/a2ui-custom-kit/remote-runtime'`**（勿用主入口，避免打进 React）。
 - 得到 **`public/{name}.mjs`**，把 **mjs** 的完整 URL 填入主应用。
 
 **Schema** 见 remote-comp 内 **`src/pages/A2UIRemoteGlow/SCHEMA.md`**。
 
 **`yarn build:remote`** 仍给 **RemoteComp** 用，与 A2UI **`import()`** 链路分离。
 
-**不要** 把 **`@bote/a2ui-render`** 打进远程包；Lit 与 **BaseRenderer** 只在主应用。
+**不要** 把 **`@boteai/a2ui-render`** 打进远程包；Lit 与 **BaseRenderer** 只在主应用。
 
 ## 规范全文
 

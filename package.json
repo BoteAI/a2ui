@@ -7,7 +7,7 @@
     "watch": "lerna run --parallel dev",
     "start": "cd app && yarn start",
     "build": "lerna run build --stream",
-    "build:comp": "lerna run build --scope @bote/* --stream",
+    "build:comp": "lerna run build --scope @boteai/* --stream",
     "pub": "node scripts/publish.js"
   },
   "resolutions": {

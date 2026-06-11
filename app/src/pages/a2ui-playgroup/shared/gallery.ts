@@ -1,4 +1,4 @@
-import type { A2UIMessage } from '@bote/a2ui-render';
+import type { A2UIMessage } from '@boteai/a2ui-render';
 
 export type GalleryCategoryId = 'all' | 'card' | 'form' | 'data' | 'special';
 
@@ -18,7 +18,7 @@ type V09GalleryFile = {
   messages?: A2UIMessage[];
 };
 
-/** 与 @bote/a2ui-render litCompat09 中 basicCatalog.id 对齐 */
+/** 与 @boteai/a2ui-render litCompat09 中 basicCatalog.id 对齐 */
 const V09_BASIC_CATALOG_ID = 'https://a2ui.org/specification/v0_9/basic_catalog.json';
 
 function normalizeV09GalleryMessages(messages: A2UIMessage[]): A2UIMessage[] {

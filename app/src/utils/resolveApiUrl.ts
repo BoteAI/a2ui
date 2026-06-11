@@ -1,6 +1,6 @@
 /**
  * 简化版 resolveApiUrl：将 API 路径解析为完整 URL
- * 原始版本来自 @bote/utils，此版本移除了对 @lingxiteam/security 等业务依赖
+ * 原始版本来自 @boteai/utils，此版本移除了对 @lingxiteam/security 等业务依赖
  */
 
 const API_BASE = process.env.REACT_APP_REQ_PREFIX

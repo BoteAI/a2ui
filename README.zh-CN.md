@@ -4,7 +4,7 @@
 
 [English](./README.md) | 中文 · **仓库**：[github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
 
-> 项目持续迭代中，`@bote/a2ui-render` 与 `@bote/a2ui-custom-kit` 正准备开源发布，欢迎反馈与贡献。
+> 项目持续迭代中，`@boteai/a2ui-render` 与 `@boteai/a2ui-custom-kit` 正准备开源发布，欢迎反馈与贡献。
 
 ---
 
@@ -33,7 +33,7 @@ yarn start       # 启动 Playground 开发服务
 
 也可进入 `app` 目录执行 `yarn dev`，效果与根目录 `yarn start` 相同。
 
-开发 packages 时，可在另一个终端运行 `yarn watch`，监听 `@bote/a2ui-render` 与 `@bote/a2ui-custom-kit` 的变更。
+开发 packages 时，可在另一个终端运行 `yarn watch`，监听 `@boteai/a2ui-render` 与 `@boteai/a2ui-custom-kit` 的变更。
 
 ---
 
@@ -53,10 +53,10 @@ yarn start       # 启动 Playground 开发服务
 Agent / 后端
       │  A2UI messages JSON
       ▼
-@bote/a2ui-render          ← 协议渲染引擎（React + Lit 表面）
+@boteai/a2ui-render          ← 协议渲染引擎（React + Lit 表面）
       │  customComponents 注册表
       ▼
-@bote/a2ui-custom-kit      ← 自定义组件定义、注册与打包工具
+@boteai/a2ui-custom-kit      ← 自定义组件定义、注册与打包工具
       │
       ▼
 业务自定义组件（本地 bundle 或远程 .mjs）
@@ -68,8 +68,8 @@ Agent / 后端
 
 | 包 | npm | 职责 |
 |----|-----|------|
-| **a2ui-render** | `@bote/a2ui-render` | A2UI v0.8 / v0.9 协议渲染引擎 |
-| **a2ui-custom-kit** | `@bote/a2ui-custom-kit` | 自定义组件开发工具集 |
+| **a2ui-render** | `@boteai/a2ui-render` | A2UI v0.8 / v0.9 协议渲染引擎 |
+| **a2ui-custom-kit** | `@boteai/a2ui-custom-kit` | 自定义组件开发工具集 |
 
 本仓库 `app/` 目录还包含 **Playground 试玩应用**，用于浏览示例、编辑 JSON、验证自定义组件，不发布到 npm。
 
@@ -82,7 +82,7 @@ Agent / 后端
 `BaseRenderer` 接收 A2UI 消息数组，渲染完整可交互界面。支持 **v0.8 / v0.9 双协议**、消息版本自动推断、响应式工具与声明式 action 回调。
 
 ```tsx
-import { BaseRenderer, type A2UIMessage } from '@bote/a2ui-render';
+import { BaseRenderer, type A2UIMessage } from '@boteai/a2ui-render';
 
 <BaseRenderer
   messages={messages}
@@ -110,7 +110,7 @@ import { BaseRenderer, type A2UIMessage } from '@bote/a2ui-render';
 
 ### 3. 自定义组件 — 两种集成方式
 
-协议消息中出现 **业务自定义组件名** 时，通过 `@bote/a2ui-custom-kit` 注册实现：
+协议消息中出现 **业务自定义组件名** 时，通过 `@boteai/a2ui-custom-kit` 注册实现：
 
 | 方式 | 适用场景 | 产出物 |
 |------|----------|--------|
@@ -129,7 +129,7 @@ import {
   createReactComponent,
   defineRegistryEntry,
   mergeRegistryEntries,
-} from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-custom-kit';
 
 const api = defineComponentApi({ name: 'MyCard', shape: { title: z.string() } });
 const element = createReactComponent(({ title }) => <div>{title}</div>);
@@ -139,7 +139,7 @@ const registry = mergeRegistryEntries(defineRegistryEntry({ api, element }));
 **远程 ESM 典型流程**
 
 ```ts
-import { loadRemoteA2UICustomRegistry, mergeRegistryEntries } from '@bote/a2ui-render';
+import { loadRemoteA2UICustomRegistry, mergeRegistryEntries } from '@boteai/a2ui-render';
 
 const remote = await loadRemoteA2UICustomRegistry(
   'https://cdn.example.com/custom-components.mjs',
@@ -167,7 +167,7 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 
 ### 5. 路线图 — SDK 扩展组件
 
-官方 A2UI catalog 覆盖核心布局与输入类组件。我们计划在 **`@bote/a2ui-render` 中内置一批扩展组件** — 如数据表格、轮播、富文本等 — 补齐常见产品场景，避免每个接入方从零实现。
+官方 A2UI catalog 覆盖核心布局与输入类组件。我们计划在 **`@boteai/a2ui-render` 中内置一批扩展组件** — 如数据表格、轮播、富文本等 — 补齐常见产品场景，避免每个接入方从零实现。
 
 计划方向包括数据展示、富内容与领域组件，欢迎通过 Issue 提交需求或 RFC。
 
@@ -183,14 +183,14 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
                            │ JSON
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  @bote/a2ui-render                                           │
+│  @boteai/a2ui-render                                           │
 │  BaseRenderer → LitSurfaceHost → @a2ui/lit Web Components  │
 │  · 主题预设 · onAction · 远程注册表合并                      │
 └──────────────────────────┬──────────────────────────────────┘
                            │ 按 component 名匹配
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  @bote/a2ui-custom-kit                                       │
+│  @boteai/a2ui-custom-kit                                       │
 │  defineComponentApi · createReactComponent / createNative   │
 │  defineRegistryEntry · mergeRegistryEntries · 远程 ESM 打包  │
 └─────────────────────────────────────────────────────────────┘
@@ -198,7 +198,7 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 
 **怎么选包？**
 
-- **只用标准 A2UI 组件** → 安装 `@bote/a2ui-render` 即可
+- **只用标准 A2UI 组件** → 安装 `@boteai/a2ui-render` 即可
 - **应用内自定义组件** → 两个包装一起；kit 产出注册表，render 消费
 - **远程脚本形式** → kit 负责开发打包，render 的 `loadRemoteA2UICustomRegistry` 负责运行时加载
 
@@ -209,16 +209,16 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 ### 安装
 
 ```bash
-yarn add @bote/a2ui-render
+yarn add @boteai/a2ui-render
 
 # 需要自定义组件时
-yarn add @bote/a2ui-custom-kit
+yarn add @boteai/a2ui-custom-kit
 ```
 
 ### 最小渲染示例
 
 ```tsx
-import { BaseRenderer } from '@bote/a2ui-render';
+import { BaseRenderer } from '@boteai/a2ui-render';
 
 export function AgentPanel({ messages }) {
   return (
@@ -235,7 +235,7 @@ export function AgentPanel({ messages }) {
 ### 携带自定义组件
 
 ```tsx
-import { BaseRenderer } from '@bote/a2ui-render';
+import { BaseRenderer } from '@boteai/a2ui-render';
 import { myCustomRegistry } from './my-custom-registry';
 
 <BaseRenderer
@@ -250,7 +250,7 @@ import { myCustomRegistry } from './my-custom-registry';
 
 ## API 速查
 
-### `@bote/a2ui-render`
+### `@boteai/a2ui-render`
 
 | 导出 | 说明 |
 |------|------|
@@ -263,7 +263,7 @@ import { myCustomRegistry } from './my-custom-registry';
 | `inferProtocolVersionFromMessages` | 自动推断 v0.8 / v0.9 |
 | `useResponsive` / `isMobile` | 响应式工具 |
 
-### `@bote/a2ui-custom-kit`
+### `@boteai/a2ui-custom-kit`
 
 | 导出 | 说明 |
 |------|------|

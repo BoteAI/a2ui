@@ -16,8 +16,8 @@ import {
   BaseRenderer,
   type A2UIMessage,
   type A2UIThemePreset,
-} from '@bote/a2ui-render';
-import type { A2UICustomComponentRegistry } from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-render';
+import type { A2UICustomComponentRegistry } from '@boteai/a2ui-custom-kit';
 import DemoCard from './DemoCard';
 import { GALLERY_CATEGORIES, GALLERY_CATEGORY_LABELS } from './galleryCategories';
 import type { GalleryCategoryId, GalleryItem } from './gallery';

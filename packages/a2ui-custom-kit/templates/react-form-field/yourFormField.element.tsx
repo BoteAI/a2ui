@@ -7,7 +7,7 @@ import {
   subscribeV09ComponentUpdates,
   writeBoundValue,
   type A2UICustomElementHost,
-} from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-custom-kit';
 
 type FieldViewProps = {
   label: string;

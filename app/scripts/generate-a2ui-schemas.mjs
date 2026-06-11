@@ -35,7 +35,7 @@ export async function generateA2uiSchemas(root, userConfig) {
     format: 'esm',
     outfile: bundleOut,
     alias: {
-      '@bote/a2ui-custom-kit/remote-runtime': kitRemoteRuntime,
+      '@boteai/a2ui-custom-kit/remote-runtime': kitRemoteRuntime,
     },
     logLevel: 'silent',
   });

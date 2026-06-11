@@ -6,7 +6,7 @@
  * - 注意：render 不是 React 函数组件，回调内不可直接使用 Hooks
  */
 import React from 'react';
-import { createReactComponent, ensureComponentStyles } from '@bote/a2ui-custom-kit';
+import { createReactComponent, ensureComponentStyles } from '@boteai/a2ui-custom-kit';
 import { DemoReactComponentApi } from './api';
 import styles from './index.less';
 

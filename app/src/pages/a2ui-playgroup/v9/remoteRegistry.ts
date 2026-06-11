@@ -1,5 +1,5 @@
-import { defineRegistryEntry, mergeRegistryEntries } from '@bote/a2ui-custom-kit';
-import type { A2UICustomComponentRegistry } from '@bote/a2ui-custom-kit';
+import { defineRegistryEntry, mergeRegistryEntries } from '@boteai/a2ui-custom-kit';
+import type { A2UICustomComponentRegistry } from '@boteai/a2ui-custom-kit';
 import { DemoNativeElementApi } from '../../a2ui-remote/DemoNativeElement/api';
 import { DemoNativeElementElement } from '../../a2ui-remote/DemoNativeElement/element';
 import { DemoReactComponentApi } from '../../a2ui-remote/DemoReactComponent/api';

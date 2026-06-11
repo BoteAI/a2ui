@@ -1,4 +1,4 @@
-import { defineRegistryEntry, mergeRegistryEntries } from '@bote/a2ui-custom-kit';
+import { defineRegistryEntry, mergeRegistryEntries } from '@boteai/a2ui-custom-kit';
 import { YourComponentApi } from '../api/yourComponent.api';
 import { YourComponentElement } from '../elements/yourComponent.element';
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ActionSchema, defineComponentApi, DynString } from '@bote/a2ui-custom-kit';
+import { ActionSchema, defineComponentApi, DynString } from '@boteai/a2ui-custom-kit';
 
 /**
  * 示例 4：dispatchDeclaredAction vs dispatchA2UIAction

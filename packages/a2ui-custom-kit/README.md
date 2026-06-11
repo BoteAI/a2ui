@@ -1,4 +1,4 @@
-# @bote/a2ui-custom-kit
+# @boteai/a2ui-custom-kit
 
 **仓库**：[github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
 
@@ -8,19 +8,19 @@
 
 | 职责 | 包 |
 |------|-----|
-| **渲染**协议界面、加载远程 URL | `@bote/a2ui-render`（单独安装即可） |
-| **开发**自定义组件、产出注册表 / `.mjs` | `@bote/a2ui-custom-kit`（可选） |
+| **渲染**协议界面、加载远程 URL | `@boteai/a2ui-render`（单独安装即可） |
+| **开发**自定义组件、产出注册表 / `.mjs` | `@boteai/a2ui-custom-kit`（可选） |
 
 渲染侧已内置 `remoteComponentUrls` 与 `loadRemoteA2UICustomRegistry`，**业务页面只渲染、不开发自定义组件时，不必安装本包**。
 
 ---
 
-## 与 @bote/a2ui-render 的关系
+## 与 @boteai/a2ui-render 的关系
 
 ```
 开发阶段                          运行阶段
 ────────                          ────────
-@bote/a2ui-custom-kit             @bote/a2ui-render
+@boteai/a2ui-custom-kit             @boteai/a2ui-render
   defineComponentApi                BaseRenderer
   createNativeElement /             ├─ customComponents（本地注册表）
   createReactComponent              └─ remoteComponentUrls（CDN .mjs）
@@ -30,9 +30,9 @@
         └─ esbuild → public/*.mjs ──► remoteComponentUrls
 ```
 
-- 本包**不依赖** `@bote/a2ui-render`，可仅在组件工程 / monorepo 的 `a2ui-remote` 目录中使用。
-- **`A2UICustomComponentRegistry` 等类型**在本包与 `@bote/a2ui-render` 中各自定义并对齐，**无需** `@bote/types`。
-- 类型从对应包 import 即可：`import type { A2UICustomComponentRegistry } from '@bote/a2ui-custom-kit'` 或 `'@bote/a2ui-render'`。
+- 本包**不依赖** `@boteai/a2ui-render`，可仅在组件工程 / monorepo 的 `a2ui-remote` 目录中使用。
+- **`A2UICustomComponentRegistry` 等类型**在本包与 `@boteai/a2ui-render` 中各自定义并对齐，**无需** `@boteai/types`。
+- 类型从对应包 import 即可：`import type { A2UICustomComponentRegistry } from '@boteai/a2ui-custom-kit'` 或 `'@boteai/a2ui-render'`。
 
 ---
 
@@ -40,7 +40,7 @@
 
 | 场景 | 需要本包？ |
 |------|-----------|
-| 只渲染标准 A2UI + 远程 URL | 否，仅 `@bote/a2ui-render` |
+| 只渲染标准 A2UI + 远程 URL | 否，仅 `@boteai/a2ui-render` |
 | 在应用内写本地自定义组件 | 是 |
 | 打包独立 `.mjs` 供 CDN 部署 | 是 |
 | 合并多份本地注册表 | 是（`mergeRegistryEntries`） |
@@ -50,7 +50,7 @@
 ## 快速开始
 
 ```bash
-yarn add @bote/a2ui-custom-kit @bote/a2ui-render
+yarn add @boteai/a2ui-custom-kit @boteai/a2ui-render
 ```
 
 典型流程：
@@ -67,7 +67,7 @@ import {
   mergeRegistryEntries,
   createReactComponent,
   DynString,
-} from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-custom-kit';
 
 // … api + element 实现
 
@@ -77,7 +77,7 @@ export const a2uiRemoteRegistry = mergeRegistryEntries(
 ```
 
 ```tsx
-import { BaseRenderer } from '@bote/a2ui-render';
+import { BaseRenderer } from '@boteai/a2ui-render';
 import { a2uiRemoteRegistry } from './your-remote-registry';
 
 <BaseRenderer
@@ -113,8 +113,8 @@ import { a2uiRemoteRegistry } from './your-remote-registry';
 
 | 入口 | 说明 |
 |------|------|
-| `@bote/a2ui-custom-kit/remote-runtime` | 纯原生组件 bundle，不含 React |
-| `@bote/a2ui-custom-kit/react-runtime` | 含 `createReactComponent` |
+| `@boteai/a2ui-custom-kit/remote-runtime` | 纯原生组件 bundle，不含 React |
+| `@boteai/a2ui-custom-kit/react-runtime` | 含 `createReactComponent` |
 
 `templates/` 目录提供可拷贝的组件模板。
 

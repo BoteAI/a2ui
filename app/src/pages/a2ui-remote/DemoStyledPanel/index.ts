@@ -1,4 +1,4 @@
-import { defineRegistryEntry, mergeRegistryEntries } from '@bote/a2ui-custom-kit';
+import { defineRegistryEntry, mergeRegistryEntries } from '@boteai/a2ui-custom-kit';
 import { DemoStyledPanelApi } from './api';
 import { DemoStyledPanelElement } from './element';
 

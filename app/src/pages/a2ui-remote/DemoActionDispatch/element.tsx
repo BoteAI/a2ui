@@ -18,7 +18,7 @@ import {
   dispatchA2UIAction,
   dispatchDeclaredAction,
   ensureComponentStyles,
-} from '@bote/a2ui-custom-kit';
+} from '@boteai/a2ui-custom-kit';
 import { DemoActionDispatchApi } from './api';
 import styles from './index.less';
 

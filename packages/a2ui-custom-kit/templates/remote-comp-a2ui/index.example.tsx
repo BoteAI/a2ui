@@ -2,7 +2,7 @@
  * 复制到 remote-comp：src/pages/A2UIRemoteGlow/index.tsx
  * lingxirc remoteComponents.entry 增加 'A2UIRemoteGlow'；给主应用 import 请用 yarn build:a2ui-esm 产出 .mjs，勿用 lingxi 的 build:remote .js
  *
- * 依赖：在 remote-comp 的 package.json 增加与主应用同版本的 @bote/a2ui-custom-kit
+ * 依赖：在 remote-comp 的 package.json 增加与主应用同版本的 @boteai/a2ui-custom-kit
  */
 import { z } from 'zod';
 import {
@@ -14,7 +14,7 @@ import {
   mergeRegistryEntries,
   readComponentProps,
   readStringProp,
-} from '@bote/a2ui-custom-kit/remote-runtime';
+} from '@boteai/a2ui-custom-kit/remote-runtime';
 
 const RemoteGlowCapsuleApi = defineComponentApi({
   name: 'RemoteGlowCapsule',

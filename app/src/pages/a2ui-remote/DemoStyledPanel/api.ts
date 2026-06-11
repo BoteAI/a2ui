@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { defineComponentApi, DynString } from '@bote/a2ui-custom-kit';
+import { defineComponentApi, DynString } from '@boteai/a2ui-custom-kit';
 
 /** 示例 3：ensureComponentStyles — 将 Less 编译 CSS 注入 ShadowRoot */
 export const DemoStyledPanelApi = defineComponentApi({
