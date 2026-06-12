@@ -3,7 +3,7 @@
  */
 export default {
   schema: {
-    outdir: 'src/pages/a2ui-presetComp/schemas',
+    outdir: 'src/schemas',
     registry: 'scripts/a2ui-preset-schema-registry.ts',
   },
 };

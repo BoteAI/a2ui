@@ -6,9 +6,7 @@
     "start": "lingxi-env --node-compatible umi dev",
     "build": "lingxi-env --node-compatible umi build",
     "build:a2ui": "node scripts/build-a2ui-esm.mjs",
-    "generate:a2ui-schema": "node scripts/generate-a2ui-schemas.mjs",
-    "build:presets": "node scripts/embedPresetStyles.js && node scripts/sync-preset-artifacts.mjs && node scripts/build-preset-schemas.mjs && node scripts/generate-preset-schemas-ts.mjs && father build",
-    "dev:presets": "yarn build:presets && father dev"
+    "generate:a2ui-schema": "node scripts/generate-a2ui-schemas.mjs"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",

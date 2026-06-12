@@ -9,21 +9,11 @@
       "types": "./dist/esm/index.d.ts",
       "import": "./dist/esm/index.js",
       "default": "./dist/esm/index.js"
-    },
-    "./preset-schemas": {
-      "types": "./dist/esm/presetComp/presetSchemas.d.ts",
-      "import": "./dist/esm/presetComp/presetSchemas.js",
-      "default": "./dist/esm/presetComp/presetSchemas.js"
-    },
-    "./preset-registry": {
-      "types": "./dist/esm/presetComp/registry.d.ts",
-      "import": "./dist/esm/presetComp/registry.js",
-      "default": "./dist/esm/presetComp/registry.js"
     }
   },
   "scripts": {
-    "dev": "node ./scripts/checkPresetArtifacts.js && node ./scripts/embedShadowCss.js && father dev --no-clean",
-    "build": "node ./scripts/checkPresetArtifacts.js && node ./scripts/embedShadowCss.js && father build --no-clean",
+    "dev": "node ./scripts/embedShadowCss.js && father dev --no-clean",
+    "build": "node ./scripts/embedShadowCss.js && father build --no-clean",
     "build:lit-compat": "node ./scripts/buildLitCompat.js",
     "build:external": "node ./scripts/buildExternal.js",
     "build:deps": "father prebundle"

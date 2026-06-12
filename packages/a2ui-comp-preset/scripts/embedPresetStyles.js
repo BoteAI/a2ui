@@ -1,5 +1,5 @@
 /**
- * 构建前将 src/pages/a2ui-presetComp 下各组件的 index.less 编译为 CSS 字符串，
+ * 构建前将 src 下各组件的 index.less 编译为 CSS 字符串，
  * 生成同名目录的 styles.generated.ts（export default "CSS"），
  * 供 Father bundless 正常处理，无需 Less 插件。
  *
@@ -10,8 +10,8 @@ const fs = require('fs');
 const less = require('less');
 
 const root = path.resolve(__dirname, '..');
-const presetDir = path.resolve(root, 'src/pages/a2ui-presetComp');
-const themeDir = path.resolve(root, 'src/assets/theme/less');
+const presetDir = path.resolve(root, 'src');
+const themeDir = path.resolve(root, 'src/theme/less');
 
 function findLessFiles() {
   const results = [];
@@ -38,7 +38,7 @@ async function compileLess(lessPath) {
 async function run() {
   const files = findLessFiles();
   if (files.length === 0) {
-    console.warn('[embedPresetStyles] No index.less files found in src/pages/a2ui-presetComp/');
+    console.warn('[embedPresetStyles] No index.less files found in src/');
     return;
   }
 

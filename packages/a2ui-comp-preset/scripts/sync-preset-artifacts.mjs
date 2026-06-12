@@ -1,5 +1,5 @@
 /**
- * 从 src/pages/a2ui-presetComp/manifest.ts 同步生成 registry 与 schema-registry 源码。
+ * 从 src/manifest.ts 同步生成 registry 与 schema-registry 源码。
  */
 /* eslint-disable no-console */
 import fs from 'fs';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const presetRoot = path.join(root, 'src/pages/a2ui-presetComp');
+const presetRoot = path.join(root, 'src');
 const manifestPath = path.join(presetRoot, 'manifest.ts');
 
 function parsePresetNames(source) {
@@ -30,7 +30,7 @@ function writeRegistry(names) {
   const args = names.join(',\n  ');
   const content = `/**
  * 本文件由 scripts/sync-preset-artifacts.mjs 自动生成，请勿手改。
- * 源: src/pages/a2ui-presetComp/manifest.ts
+ * 源: src/manifest.ts
  */
 import { mergeRegistryEntries } from '@boteai/a2ui-custom-kit';
 ${imports}
@@ -46,12 +46,12 @@ export const a2uiPresetComponentRegistry = mergeRegistryEntries(
 
 function writeSchemaRegistry(names) {
   const imports = names
-    .map((name) => `import { ${name}Api } from '../src/pages/a2ui-presetComp/${name}/api';`)
+    .map((name) => `import { ${name}Api } from '../src/${name}/api';`)
     .join('\n');
   const entries = names.map((name) => `  { name: '${name}', api: ${name}Api },`).join('\n');
   const content = `/**
  * 本文件由 scripts/sync-preset-artifacts.mjs 自动生成，请勿手改。
- * 源: src/pages/a2ui-presetComp/manifest.ts
+ * 源: src/manifest.ts
  */
 import { componentApiToJsonSchema2019 } from '@boteai/a2ui-custom-kit';
 ${imports}

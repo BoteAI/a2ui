@@ -2,8 +2,8 @@ import { defineConfig } from 'father';
 
 export default defineConfig({
   esm: {
-    input: 'src/pages/a2ui-presetComp',
-    output: '../packages/a2ui-render/dist/esm/presetComp',
+    input: 'src',
+    output: 'dist/esm',
     ignores: ['**/*.stories.ts', '**/debug.tsx'],
   },
   extraBabelPlugins: [

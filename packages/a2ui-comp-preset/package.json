@@ -1,0 +1,64 @@
+{
+  "name": "@boteai/a2ui-comp-preset",
+  "version": "0.1.0",
+  "description": "博特 A2UI 内置 Preset 组件集",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./registry": {
+      "types": "./dist/esm/registry.d.ts",
+      "import": "./dist/esm/registry.js",
+      "default": "./dist/esm/registry.js"
+    },
+    "./schemas": {
+      "types": "./dist/esm/presetSchemas.d.ts",
+      "import": "./dist/esm/presetSchemas.js",
+      "default": "./dist/esm/presetSchemas.js"
+    }
+  },
+  "scripts": {
+    "dev": "node scripts/embedPresetStyles.js && node scripts/sync-preset-artifacts.mjs && node scripts/build-preset-schemas.mjs && node scripts/generate-preset-schemas-ts.mjs && father dev",
+    "build": "node scripts/embedPresetStyles.js && node scripts/sync-preset-artifacts.mjs && node scripts/build-preset-schemas.mjs && node scripts/generate-preset-schemas-ts.mjs && father build"
+  },
+  "keywords": [
+    "a2ui",
+    "preset",
+    "components"
+  ],
+  "authors": [
+    "wujian"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": "^17.x",
+    "react-dom": "^17.x"
+  },
+  "dependencies": {
+    "@boteai/a2ui-custom-kit": "file:../a2ui-custom-kit",
+    "antd": "4.24.14",
+    "recharts": "2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "babel-plugin-import": "^1.13.8",
+    "esbuild": "^0.21.5",
+    "father": "^4.4.5",
+    "less": "^4.2.0",
+    "react": "17.x",
+    "react-dom": "17.x"
+  }
+}
