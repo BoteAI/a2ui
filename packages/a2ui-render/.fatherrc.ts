@@ -20,30 +20,19 @@ export default defineConfig({
       'src/stories/**/*',
       'src/**/*.stories.ts',
       'src/common/**/*',
-      'src/presetComp/**/*',
     ],
   },
-  // 动态添加 alias 配置
-  ...(isExternal ? {
-    alias: {
-      antd: '@gzued/antd-compiled/compiled/antd',
-      // 使用目录级别的别名，自动处理所有 antd/es/* 路径
-      'antd/es': getAntdEsPath(),
-      '@ant-design/icons': '@gzued/antd-compiled/compiled/@ant-design/icons',
-      dayjs: '@gzued/antd-compiled/compiled/dayjs',
-      classnames: '@gzued/antd-compiled/compiled/classnames',
-    },
-  } : {
-    extraBabelPlugins: [
-      [
-        'import',
-        {
-          libraryName: 'antd',
-          libraryDirectory: 'es',
-          style: true,
+  // 外部构建（BUILD_EXTERNAL）时使用预编译 antd 别名
+  ...(isExternal
+    ? {
+        alias: {
+          antd: '@gzued/antd-compiled/compiled/antd',
+          'antd/es': getAntdEsPath(),
+          '@ant-design/icons': '@gzued/antd-compiled/compiled/@ant-design/icons',
+          dayjs: '@gzued/antd-compiled/compiled/dayjs',
+          classnames: '@gzued/antd-compiled/compiled/classnames',
         },
-      ],
-    ],
-  }),
+      }
+    : {}),
   platform: 'browser',
 });

@@ -81,8 +81,3 @@ export {
 
 export { useRemoteA2UICustomRegistry } from './remote/useRemoteA2UICustomRegistry';
 export type { RemoteA2UIRegistryState } from './remote/useRemoteA2UICustomRegistry';
-
-// 预设组件（Preset）导出（产物由 app build:presets 写入 dist/esm/presetComp）
-export { a2uiPresetComponentRegistry } from './presetExports/registry';
-export { a2uiPresetComponentSchemas } from './presetExports/presetSchemas';
-export type { a2uiPresetComponentName } from './presetExports/manifest';
