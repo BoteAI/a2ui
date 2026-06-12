@@ -23,6 +23,7 @@ app/public/*
 .history/
 
 .npmrc
+PUBLISH-GUIDE.md
 .qoder
 /design
 

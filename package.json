@@ -8,7 +8,8 @@
     "start": "cd app && yarn start",
     "build": "lerna run build --stream",
     "build:comp": "lerna run build --scope @boteai/* --stream",
-    "pub": "node scripts/publish.js"
+    "pub": "node scripts/publish.js",
+    "pub:all": "node scripts/publish-all.js"
   },
   "resolutions": {
     "@types/react": "17.x"

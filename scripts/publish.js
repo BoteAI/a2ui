@@ -1,22 +1,16 @@
 #!/usr/bin/env node
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const {
+  getGitHead,
+  isValidVersion,
+  resolvePkgDir,
+  listShortPackageNames,
+  preparePackage,
+  restorePackage,
+  publishPackage,
+  readPkgJson,
+} = require('./publish-utils');
 
-const rootDir = path.resolve(__dirname, '..');
-
-// 短名 / 全名 -> 包目录映射
-const PACKAGE_MAP = {
-  'a2ui-render': 'packages/a2ui-render',
-  'a2ui-custom-kit': 'packages/a2ui-custom-kit',
-  'a2ui-comp-preset': 'packages/a2ui-comp-preset',
-  '@boteai/a2ui-render': 'packages/a2ui-render',
-  '@boteai/a2ui-custom-kit': 'packages/a2ui-custom-kit',
-  '@boteai/a2ui-comp-preset': 'packages/a2ui-comp-preset',
-};
-
-// ─── 参数解析 ───
 const args = process.argv.slice(2);
 const pkgName = args[0];
 const version = args[1];
@@ -29,63 +23,42 @@ if (!pkgName || !version) {
   console.error('  yarn pub a2ui-custom-kit 0.2.0');
   console.error('');
   console.error('Available packages:');
-  Object.keys(PACKAGE_MAP)
-    .filter((n) => !n.startsWith('@'))
-    .forEach((n) => console.error(`  - ${n}`));
+  listShortPackageNames().forEach((n) => console.error(`  - ${n}`));
   process.exit(1);
 }
 
-const pkgDir = PACKAGE_MAP[pkgName];
+const pkgDir = resolvePkgDir(pkgName);
 if (!pkgDir) {
   console.error(`❌ Unknown package: ${pkgName}`);
-  console.error(
-    'Available:',
-    Object.keys(PACKAGE_MAP)
-      .filter((n) => !n.startsWith('@'))
-      .join(', '),
-  );
+  console.error('Available:', listShortPackageNames().join(', '));
   process.exit(1);
 }
 
-// 版本格式校验
-if (!/^\d+\.\d+\.\d+(-[\w.]+)?$/.test(version)) {
+if (!isValidVersion(version)) {
   console.error(`❌ Invalid version: ${version}`);
   process.exit(1);
 }
 
-// ─── 获取当前 git HEAD ───
 let gitHead;
 try {
-  gitHead = execSync('git rev-parse HEAD', { cwd: rootDir }).toString().trim();
+  gitHead = getGitHead();
 } catch (_) {
   console.error('❌ Failed to get git HEAD. Make sure you are in a git repository.');
   process.exit(1);
 }
 
-// ─── 读取 & 更新 package.json ───
-const pkgJsonPath = path.join(rootDir, pkgDir, 'package.json');
-const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf-8'));
-const oldVersion = pkgJson.version;
-
-console.log(`\n📦 ${pkgJson.name}: ${oldVersion} → ${version}`);
+const { pkgJson } = readPkgJson(pkgDir);
+console.log(`\n📦 ${pkgJson.name}: ${pkgJson.version} → ${version}`);
 console.log(`🔖 gitHead: ${gitHead}\n`);
 
-pkgJson.version = version;
-pkgJson.gitHead = gitHead;
+const snapshot = preparePackage(pkgDir, version, gitHead);
 
-fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2) + '\n');
-
-// ─── 执行发布 ───
 try {
-  execSync('npm publish --access public --registry https://registry.npmjs.org/', {
-    cwd: path.join(rootDir, pkgDir),
-    stdio: 'inherit',
-  });
+  publishPackage(pkgDir);
   console.log(`\n✅ Published ${pkgJson.name}@${version} successfully!\n`);
 } catch (_) {
   console.error(`\n❌ Failed to publish ${pkgJson.name}@${version}`);
   console.error('Reverting package.json ...');
-  pkgJson.version = oldVersion;
-  fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2) + '\n');
+  restorePackage(pkgDir, snapshot);
   process.exit(1);
 }
