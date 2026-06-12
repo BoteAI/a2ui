@@ -146,31 +146,31 @@ const customComponents: A2UICustomComponentRegistry = {
 | `inferProtocolVersionFromMessages` | 自动推断 v0.8 / v0.9 |
 | `useResponsive` / `isMobile` 等 | 响应式工具 |
 | `A2UIMessage` / `A2UICustomComponentRegistry` 等 | 类型定义（本包自带，无需 `@boteai/types`） |
-| `presetComponentRegistry` | 内置 Preset 组件注册表，可直接传给 `BaseRenderer.customComponents` |
-| `presetSchemas` | 内置 Preset 组件 JSON Schema（agent 格式），供配置器 / codegen 使用 |
+| `a2uiPresetComponentRegistry` | 内置 Preset 组件注册表，可直接传给 `BaseRenderer.customComponents` |
+| `a2uiPresetComponentSchemas` | 内置 Preset 组件 JSON Schema（agent 格式），供配置器 / codegen 使用 |
 
 ### 内置 Preset 组件（直接 import）
 
 ```tsx
 import {
   BaseRenderer,
-  presetComponentRegistry,
-  presetSchemas,
-} from '@bote/a2ui-render';
+  a2uiPresetComponentRegistry,
+  a2uiPresetComponentSchemas,
+} from '@boteai/a2ui-render';
 
 <BaseRenderer
   messages={messages}
   protocolVersion="0.9"
-  customComponents={presetComponentRegistry}
+  customComponents={a2uiPresetComponentRegistry}
   onAction={handleAction}
 />
 ```
 
-新增 Preset：在 `src/preset/` 下按模板添加组件目录，并在 `src/preset/manifest.ts` 登记后执行 `yarn build`。
+Preset 源码维护在 monorepo 的 `app/src/pages/a2ui-presetComp/`。新增组件：在该目录按模板添加，并在 `manifest.ts` 登记后执行 `yarn build:presets`（或在仓库根目录 `yarn build`，会先构建 preset 再构建各包）。产物输出到本包 `dist/esm/presetComp/`。
 
-Node 脚本（如配置器 codegen）仅需 schema 时，请使用子路径 `@bote/a2ui-render/preset-schemas`，避免加载渲染器侧的样式资源。
+Node 脚本（如配置器 codegen）仅需 schema 时，请使用子路径 `@boteai/a2ui-render/preset-schemas`，避免加载渲染器侧的样式资源。
 
-仅需注册表、且需避免与页面代码打包后变量名冲突时，可使用 `@bote/a2ui-render/preset-registry`。
+仅需注册表、且需避免与页面代码打包后变量名冲突时，可使用 `@boteai/a2ui-render/preset-registry`。
 
 ---
 

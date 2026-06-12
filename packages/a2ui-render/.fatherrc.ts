@@ -16,7 +16,12 @@ const getAntdEsPath = () => {
 
 export default defineConfig({
   esm: {
-    ignores: ['src/stories/**/*', 'src/**/*.stories.ts', 'src/common/**/*'],
+    ignores: [
+      'src/stories/**/*',
+      'src/**/*.stories.ts',
+      'src/common/**/*',
+      'src/presetComp/**/*',
+    ],
   },
   // 动态添加 alias 配置
   ...(isExternal ? {
