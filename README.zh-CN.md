@@ -4,7 +4,7 @@
 
 [English](./README.md) | 中文 · **仓库**：[github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
 
-> 项目持续迭代中，`@boteai/a2ui-render` 与 `@boteai/a2ui-custom-kit` 正准备开源发布，欢迎反馈与贡献。
+> 项目持续迭代中，`@boteai/a2ui-render`、`@boteai/a2ui-custom-kit` 与 `@boteai/a2ui-comp-preset` 正准备开源发布，欢迎反馈与贡献。
 
 ---
 
@@ -33,7 +33,7 @@ yarn start       # 启动 Playground 开发服务
 
 也可进入 `app` 目录执行 `yarn dev`，效果与根目录 `yarn start` 相同。
 
-开发 packages 时，可在另一个终端运行 `yarn watch`，监听 `@boteai/a2ui-render` 与 `@boteai/a2ui-custom-kit` 的变更。
+开发 packages 时，可在另一个终端运行 `yarn watch`，监听 `@boteai/a2ui-render`、`@boteai/a2ui-custom-kit` 与 `@boteai/a2ui-comp-preset` 的变更。
 
 ---
 
@@ -55,11 +55,14 @@ Agent / 后端
       ▼
 @boteai/a2ui-render          ← 协议渲染引擎（React + Lit 表面）
       │  customComponents 注册表
-      ▼
-@boteai/a2ui-custom-kit      ← 自定义组件定义、注册与打包工具
-      │
-      ▼
-业务自定义组件（本地 bundle 或远程 .mjs）
+      ├──────────────────────────────────┐
+      ▼                                  ▼
+@boteai/a2ui-comp-preset       @boteai/a2ui-custom-kit
+（内置 Preset 组件集）         （自定义组件定义、注册与打包工具）
+      │                                  │
+      └──────────────┬───────────────────┘
+                     ▼
+        业务自定义组件（本地 bundle 或远程 .mjs）
 ```
 
 ---
@@ -70,6 +73,7 @@ Agent / 后端
 |----|-----|------|
 | **a2ui-render** | `@boteai/a2ui-render` | A2UI v0.8 / v0.9 协议渲染引擎 |
 | **a2ui-custom-kit** | `@boteai/a2ui-custom-kit` | 自定义组件开发工具集 |
+| **a2ui-comp-preset** | `@boteai/a2ui-comp-preset` | 内置 Preset 组件注册表与 JSON Schema |
 
 本仓库 `app/` 目录还包含 **Playground 试玩应用**，用于浏览示例、编辑 JSON、验证自定义组件，不发布到 npm。
 
@@ -165,11 +169,50 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 
 本地启动方式见 [体验 Playground](#体验-playground)。
 
-### 5. 路线图 — SDK 扩展组件
+### 5. 内置 Preset 组件（`@boteai/a2ui-comp-preset`）
 
-官方 A2UI catalog 覆盖核心布局与输入类组件。我们计划在 **`@boteai/a2ui-render` 中内置一批扩展组件** — 如数据表格、轮播、富文本等 — 补齐常见产品场景，避免每个接入方从零实现。
+官方 A2UI catalog 覆盖核心布局与输入类组件。**`@boteai/a2ui-comp-preset`** 提供一批 **开箱即用的 Preset 组件** — 数据表格、图表、指标卡、仪表盘卡片等 — 让接入方无需从零实现常见 UI。
 
-计划方向包括数据展示、富内容与领域组件，欢迎通过 Issue 提交需求或 RFC。
+| 组件 | 说明 |
+|------|------|
+| `PresetTitle` | 区块 / 页面标题 |
+| `PresetButton` | 样式化操作按钮 |
+| `PresetBadge` | 状态 / 标签徽章 |
+| `PresetSelect` | 下拉选择（antd） |
+| `PresetRow` / `PresetColumn` | Flex 布局容器 |
+| `PresetMetric` | KPI / 指标卡 |
+| `PresetDashboardCard` | 仪表盘摘要卡 |
+| `PresetDataTable` | 数据表格 |
+| `PresetBarChart` / `PresetPieChart` | 图表（recharts） |
+| `PresetFlightCard` | 航班状态卡（领域示例） |
+
+将生成的注册表传给 `BaseRenderer.customComponents` 即可使用：
+
+```tsx
+import { BaseRenderer } from '@boteai/a2ui-render';
+import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={a2uiPresetComponentRegistry}
+  onAction={handleAction}
+/>
+```
+
+**子路径导出**（便于按需引入与工具链集成）：
+
+| 导入路径 | 导出 | 适用场景 |
+|----------|------|----------|
+| `@boteai/a2ui-comp-preset` | 注册表 + Schema | 完整引入 |
+| `@boteai/a2ui-comp-preset/registry` | `a2uiPresetComponentRegistry` | 仅运行时渲染 |
+| `@boteai/a2ui-comp-preset/schemas` | `a2uiPresetComponentSchemas` | Agent 提示词、配置器、codegen |
+
+新增 Preset 组件：在 `packages/a2ui-comp-preset/src/` 下按模板添加组件目录，在 `manifest.ts` 登记组件名，然后执行 `yarn build`。构建脚本会自动生成 `registry.ts`、各组件 JSON Schema 与内嵌 Less 样式。
+
+### 6. 路线图 — 更多 Preset 组件
+
+后续将在 `@boteai/a2ui-comp-preset` 中持续补充轮播、富文本、领域组件等 Preset 能力，欢迎通过 Issue 提交需求或 RFC。
 
 ---
 
@@ -188,18 +231,20 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 │  · 主题预设 · onAction · 远程注册表合并                      │
 └──────────────────────────┬──────────────────────────────────┘
                            │ 按 component 名匹配
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│  @boteai/a2ui-custom-kit                                       │
-│  defineComponentApi · createReactComponent / createNative   │
-│  defineRegistryEntry · mergeRegistryEntries · 远程 ESM 打包  │
-└─────────────────────────────────────────────────────────────┘
+              ┌────────────┴────────────┐
+              ▼                         ▼
+┌──────────────────────────┐  ┌─────────────────────────────┐
+│  @boteai/a2ui-comp-preset │  │  @boteai/a2ui-custom-kit       │
+│  PresetDataTable · 图表  │  │  defineComponentApi · React/   │
+│  · 指标卡 · 布局容器      │  │  原生适配 · 远程 ESM 打包       │
+└──────────────────────────┘  └─────────────────────────────┘
 ```
 
 **怎么选包？**
 
 - **只用标准 A2UI 组件** → 安装 `@boteai/a2ui-render` 即可
-- **应用内自定义组件** → 两个包装一起；kit 产出注册表，render 消费
+- **内置 Preset 组件（表格、图表等）** → `@boteai/a2ui-comp-preset`（配合 render）
+- **应用内自定义组件** → `@boteai/a2ui-custom-kit` + render；kit 产出注册表，render 消费
 - **远程脚本形式** → kit 负责开发打包，render 的 `loadRemoteA2UICustomRegistry` 负责运行时加载
 
 ---
@@ -210,6 +255,9 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 
 ```bash
 yarn add @boteai/a2ui-render
+
+# 内置 Preset 组件（表格、图表、指标卡等）
+yarn add @boteai/a2ui-comp-preset
 
 # 需要自定义组件时
 yarn add @boteai/a2ui-custom-kit
@@ -232,16 +280,32 @@ export function AgentPanel({ messages }) {
 }
 ```
 
+### 使用内置 Preset 组件
+
+```tsx
+import { BaseRenderer } from '@boteai/a2ui-render';
+import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={a2uiPresetComponentRegistry}
+  onAction={handleAction}
+/>
+```
+
 ### 携带自定义组件
 
 ```tsx
 import { BaseRenderer } from '@boteai/a2ui-render';
+import { mergeRegistryEntries } from '@boteai/a2ui-custom-kit';
+import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
 import { myCustomRegistry } from './my-custom-registry';
 
 <BaseRenderer
   messages={messages}
   protocolVersion="0.9"
-  customComponents={myCustomRegistry}
+  customComponents={mergeRegistryEntries(a2uiPresetComponentRegistry, myCustomRegistry)}
   onAction={handleAction}
 />
 ```
@@ -275,6 +339,15 @@ import { myCustomRegistry } from './my-custom-registry';
 | `readComponentProps` / `dispatchA2UIAction` | 元素运行时工具 |
 | `subscribeV09ComponentUpdates` | 订阅 v0.9 属性更新 |
 
+### `@boteai/a2ui-comp-preset`
+
+| 导出 | 说明 |
+|------|------|
+| `a2uiPresetComponentRegistry` | 内置 Preset 组件注册表，传给 `BaseRenderer.customComponents` |
+| `a2uiPresetComponentSchemas` | 各组件 JSON Schema（Agent / codegen 格式） |
+
+子路径导出：`@boteai/a2ui-comp-preset/registry`、`@boteai/a2ui-comp-preset/schemas`。
+
 ---
 
 ## 本地开发
@@ -286,7 +359,7 @@ yarn bs
 # 启动 Playground（见上文「体验 Playground」）
 yarn start
 
-# 监听两个包
+# 监听所有包
 yarn watch
 
 # 构建所有包
@@ -295,6 +368,7 @@ yarn build
 # 发布（自动更新 version 和 gitHead）
 yarn pub a2ui-render 0.1.1
 yarn pub a2ui-custom-kit 0.1.1
+yarn pub a2ui-comp-preset 0.1.0
 ```
 
 ---

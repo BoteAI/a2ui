@@ -4,7 +4,7 @@
 
 English | [中文](./README.zh-CN.md) · **Repository**: [github.com/BoteAI/a2ui](https://github.com/BoteAI/a2ui)
 
-> This project is under active development. `@boteai/a2ui-render` and `@boteai/a2ui-custom-kit` are being prepared for open source. Feedback and contributions are welcome.
+> This project is under active development. `@boteai/a2ui-render`, `@boteai/a2ui-custom-kit`, and `@boteai/a2ui-comp-preset` are being prepared for open source. Feedback and contributions are welcome.
 
 ---
 
@@ -33,7 +33,7 @@ Open in your browser:
 
 Alternatively: `cd app && yarn dev` — same as `yarn start` from the repo root.
 
-While developing packages, run `yarn watch` in another terminal to rebuild `@boteai/a2ui-render` and `@boteai/a2ui-custom-kit` on change.
+While developing packages, run `yarn watch` in another terminal to rebuild `@boteai/a2ui-render`, `@boteai/a2ui-custom-kit`, and `@boteai/a2ui-comp-preset` on change.
 
 ---
 
@@ -55,11 +55,14 @@ Agent / Backend
       ▼
 @boteai/a2ui-render          ← protocol renderer (React + Lit surface)
       │  customComponents registry
-      ▼
-@boteai/a2ui-custom-kit      ← define, register, bundle custom components
-      │
-      ▼
-Your business UI (local bundle or remote .mjs)
+      ├──────────────────────────────────┐
+      ▼                                  ▼
+@boteai/a2ui-comp-preset       @boteai/a2ui-custom-kit
+(built-in Preset components)   (define, register, bundle custom components)
+      │                                  │
+      └──────────────┬───────────────────┘
+                     ▼
+        Your business UI (local bundle or remote .mjs)
 ```
 
 ---
@@ -70,6 +73,7 @@ Your business UI (local bundle or remote .mjs)
 |---------|-----|------|
 | **a2ui-render** | `@boteai/a2ui-render` | A2UI v0.8 / v0.9 protocol renderer |
 | **a2ui-custom-kit** | `@boteai/a2ui-custom-kit` | Custom component authoring toolkit |
+| **a2ui-comp-preset** | `@boteai/a2ui-comp-preset` | Built-in Preset component registry and JSON Schemas |
 
 This repo also ships a **Playground app** under `app/` for browsing demos, editing JSON, and validating custom components — not published to npm.
 
@@ -165,11 +169,50 @@ A built-in **Playground** lets you explore, preview, and iterate without wiring 
 
 See [Try the Playground](#try-the-playground) for how to start the app locally.
 
-### 5. Roadmap — SDK Extension Components
+### 5. Built-in Preset Components (`@boteai/a2ui-comp-preset`)
 
-The official A2UI catalog covers core layout and input primitives. We plan to ship **additional built-in components inside `@boteai/a2ui-render`** — such as data tables, carousels, and rich text — to fill common product gaps without requiring every integrator to build them from scratch.
+The official A2UI catalog covers core layout and input primitives. **`@boteai/a2ui-comp-preset`** ships a curated set of **production-ready Preset components** — data tables, charts, metrics, dashboard cards, and more — so integrators can use richer UI without building everything from scratch.
 
-Planned categories include data display, rich content, and domain-specific widgets. Contributions and RFCs are welcome via Issues.
+| Component | Description |
+|-----------|-------------|
+| `PresetTitle` | Section / page title |
+| `PresetButton` | Styled action button |
+| `PresetBadge` | Status / label badge |
+| `PresetSelect` | Dropdown select (antd) |
+| `PresetRow` / `PresetColumn` | Flex layout containers |
+| `PresetMetric` | KPI / metric card |
+| `PresetDashboardCard` | Dashboard summary card |
+| `PresetDataTable` | Data table |
+| `PresetBarChart` / `PresetPieChart` | Charts (recharts) |
+| `PresetFlightCard` | Flight status card (domain example) |
+
+Pass the generated registry to `BaseRenderer.customComponents`:
+
+```tsx
+import { BaseRenderer } from '@boteai/a2ui-render';
+import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={a2uiPresetComponentRegistry}
+  onAction={handleAction}
+/>
+```
+
+**Subpath exports** for tree-shaking and tooling:
+
+| Import path | Export | When to use |
+|-------------|--------|-------------|
+| `@boteai/a2ui-comp-preset` | registry + schemas | Full bundle |
+| `@boteai/a2ui-comp-preset/registry` | `a2uiPresetComponentRegistry` | Runtime rendering only |
+| `@boteai/a2ui-comp-preset/schemas` | `a2uiPresetComponentSchemas` | Agent prompts, configurators, codegen |
+
+To add a new Preset component: create a folder under `packages/a2ui-comp-preset/src/`, register the name in `manifest.ts`, then run `yarn build`. The build script auto-generates `registry.ts`, per-component JSON Schemas, and embedded Less styles.
+
+### 6. Roadmap — More Preset Components
+
+More Preset components — carousels, rich text, and domain widgets — will land in `@boteai/a2ui-comp-preset`. Contributions and RFCs are welcome via Issues.
 
 ---
 
@@ -188,18 +231,20 @@ Planned categories include data display, rich content, and domain-specific widge
 │  · theme presets · onAction · remote registry merge          │
 └──────────────────────────┬──────────────────────────────────┘
                            │ component name lookup
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│  @boteai/a2ui-custom-kit                                       │
-│  defineComponentApi · createReactComponent / createNative   │
-│  defineRegistryEntry · mergeRegistryEntries · remote ESM   │
-└─────────────────────────────────────────────────────────────┘
+              ┌────────────┴────────────┐
+              ▼                         ▼
+┌──────────────────────────┐  ┌─────────────────────────────┐
+│  @boteai/a2ui-comp-preset │  │  @boteai/a2ui-custom-kit       │
+│  PresetDataTable · charts │  │  defineComponentApi · React/   │
+│  · metrics · layouts      │  │  native adapters · remote ESM │
+└──────────────────────────┘  └─────────────────────────────┘
 ```
 
 **Which package do I need?**
 
 - **Standard A2UI components only** → `@boteai/a2ui-render`
-- **Custom components in-app** → both packages; kit produces registry, render consumes it
+- **Built-in Preset components (tables, charts, …)** → `@boteai/a2ui-comp-preset` (+ render)
+- **Custom components in-app** → `@boteai/a2ui-custom-kit` + render; kit produces registry, render consumes it
 - **Custom components as remote scripts** → kit for authoring + render's `loadRemoteA2UICustomRegistry` at runtime
 
 ---
@@ -210,6 +255,9 @@ Planned categories include data display, rich content, and domain-specific widge
 
 ```bash
 yarn add @boteai/a2ui-render
+
+# built-in Preset components (tables, charts, metrics, …)
+yarn add @boteai/a2ui-comp-preset
 
 # if you need custom components
 yarn add @boteai/a2ui-custom-kit
@@ -232,16 +280,32 @@ export function AgentPanel({ messages }) {
 }
 ```
 
+### With built-in Preset components
+
+```tsx
+import { BaseRenderer } from '@boteai/a2ui-render';
+import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
+
+<BaseRenderer
+  messages={messages}
+  protocolVersion="0.9"
+  customComponents={a2uiPresetComponentRegistry}
+  onAction={handleAction}
+/>
+```
+
 ### With custom components
 
 ```tsx
 import { BaseRenderer } from '@boteai/a2ui-render';
+import { mergeRegistryEntries } from '@boteai/a2ui-custom-kit';
+import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
 import { myCustomRegistry } from './my-custom-registry';
 
 <BaseRenderer
   messages={messages}
   protocolVersion="0.9"
-  customComponents={myCustomRegistry}
+  customComponents={mergeRegistryEntries(a2uiPresetComponentRegistry, myCustomRegistry)}
   onAction={handleAction}
 />
 ```
@@ -275,6 +339,15 @@ import { myCustomRegistry } from './my-custom-registry';
 | `readComponentProps` / `dispatchA2UIAction` | Runtime element helpers |
 | `subscribeV09ComponentUpdates` | Subscribe to v0.9 property updates |
 
+### `@boteai/a2ui-comp-preset`
+
+| Export | Description |
+|--------|-------------|
+| `a2uiPresetComponentRegistry` | Built-in Preset component registry — pass to `BaseRenderer.customComponents` |
+| `a2uiPresetComponentSchemas` | Per-component JSON Schemas (agent / codegen format) |
+
+Subpath exports: `@boteai/a2ui-comp-preset/registry`, `@boteai/a2ui-comp-preset/schemas`.
+
 ---
 
 ## Development
@@ -286,7 +359,7 @@ yarn bs
 # start Playground (see "Try the Playground" above)
 yarn start
 
-# watch both packages
+# watch all packages
 yarn watch
 
 # build all packages
@@ -295,6 +368,7 @@ yarn build
 # publish (bumps version + gitHead)
 yarn pub a2ui-render 0.1.1
 yarn pub a2ui-custom-kit 0.1.1
+yarn pub a2ui-comp-preset 0.1.0
 ```
 
 ---
