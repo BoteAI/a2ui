@@ -108,6 +108,50 @@ export function syncAntdSheetOnShadowRoot(root: ShadowRoot, enabled: boolean) {
   root.appendChild(style);
 }
 
+const antdObserverBySurface = new WeakMap<HTMLElement, MutationObserver>();
+
+function visitShadowRootsForAntd(surfaceElement: HTMLElement, enabled: boolean) {
+  const visit = (el: Element) => {
+    if (el.shadowRoot) {
+      const shouldAttach = enabled && shadowRootUsesAntd(el.shadowRoot);
+      syncAntdSheetOnShadowRoot(el.shadowRoot, shouldAttach);
+      Array.from(el.shadowRoot.children).forEach((child) => visit(child));
+    }
+    Array.from(el.children).forEach((child) => visit(child));
+  };
+
+  visit(surfaceElement);
+}
+
+function stopAntdStyleObserver(surfaceElement: HTMLElement) {
+  const observer = antdObserverBySurface.get(surfaceElement);
+  observer?.disconnect();
+  antdObserverBySurface.delete(surfaceElement);
+}
+
+function startAntdStyleObserver(surfaceElement: HTMLElement) {
+  stopAntdStyleObserver(surfaceElement);
+
+  let scheduled = false;
+  const scheduleResync = () => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      visitShadowRootsForAntd(surfaceElement, true);
+    });
+  };
+
+  const observer = new MutationObserver(scheduleResync);
+  observer.observe(surfaceElement, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+  antdObserverBySurface.set(surfaceElement, observer);
+}
+
 /**
  * 遍历 surface 下全部 ShadowRoot 并挂载 antd 样式表。
  *
@@ -115,30 +159,20 @@ export function syncAntdSheetOnShadowRoot(root: ShadowRoot, enabled: boolean) {
  * 子组件 a2ui-button 等与 root 的 shadow 是兄弟关系，仅在 root.shadow 内 querySelector 会漏掉深层 shadow。
  */
 export function syncAntdSheetToShadowTree(surfaceElement: HTMLElement, enabled: boolean) {
-  const synced = new WeakSet<ShadowRoot>();
+  visitShadowRootsForAntd(surfaceElement, enabled);
 
-  const syncOnce = (root: ShadowRoot) => {
-    if (synced.has(root)) return;
-    synced.add(root);
-    const shouldAttach = enabled && shadowRootUsesAntd(root);
-    syncAntdSheetOnShadowRoot(root, shouldAttach);
-  };
-
-  const visitElement = (el: Element) => {
-    if (el.shadowRoot) {
-      syncOnce(el.shadowRoot);
-      Array.from(el.shadowRoot.children).forEach((child) => visitElement(child));
-    }
-    Array.from(el.children).forEach((child) => visitElement(child));
-  };
-
-  visitElement(surfaceElement);
-
-  // root 子树常在下一帧才挂上 ant 类名，延迟再扫；无 ant 的 shadow 不会注入整包 antd.css
-  if (enabled) {
-    requestAnimationFrame(() => {
-      visitElement(surfaceElement);
-      requestAnimationFrame(() => visitElement(surfaceElement));
-    });
+  if (!enabled) {
+    stopAntdStyleObserver(surfaceElement);
+    return;
   }
+
+  startAntdStyleObserver(surfaceElement);
+
+  // React 桥接自定义组件常在首帧之后才挂上 ant 类名
+  requestAnimationFrame(() => {
+    visitShadowRootsForAntd(surfaceElement, true);
+    requestAnimationFrame(() => visitShadowRootsForAntd(surfaceElement, true));
+  });
+  window.setTimeout(() => visitShadowRootsForAntd(surfaceElement, true), 0);
+  window.setTimeout(() => visitShadowRootsForAntd(surfaceElement, true), 120);
 }

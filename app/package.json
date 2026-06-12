@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
+    "@boteai/a2ui-comp-preset": "file:../packages/a2ui-comp-preset",
     "@boteai/a2ui-custom-kit": "file:../packages/a2ui-custom-kit",
     "@boteai/a2ui-render": "file:../packages/a2ui-render",
     "classnames": "^2.3.1",

@@ -682,6 +682,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
           removeMcDismiss();
           removeActionSub?.();
           el.removeEventListener('a2uiaction', handleA2UIAction);
+          syncAntdSheetToShadowTree(el, false);
           processor.clearSurfaces();
           processorRef.current = null;
           builtMessagesRef.current = null;
@@ -731,10 +732,11 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
     if (!surfaceEl) return;
     applyCssVars(surfaceEl, mergedStyleVars);
     syncThemePresetSheetToShadowTree(surfaceEl, mergedThemePresetCss);
-    if (injectAntdStylesInShadow) {
-      syncAntdSheetToShadowTree(surfaceEl, true);
-    }
-  }, [mergedStyleVars, mergedThemePresetCss, injectAntdStylesInShadow]);
+    syncAntdSheetToShadowTree(surfaceEl, injectAntdStylesInShadow);
+    return () => {
+      syncAntdSheetToShadowTree(surfaceEl, false);
+    };
+  }, [mergedStyleVars, mergedThemePresetCss, injectAntdStylesInShadow, renderInputKey]);
 
   useEffect(() => {
     if (selectedComponentId === undefined) return;
@@ -1156,8 +1158,6 @@ function applySurfaceRuntimeExtras(
   themePresetCss: string,
 ) {
   syncThemePresetSheetToShadowTree(surfaceEl, themePresetCss);
-  if (injectAntdStyles) {
-    syncAntdSheetToShadowTree(surfaceEl, true);
-  }
+  syncAntdSheetToShadowTree(surfaceEl, injectAntdStyles);
   attachA2uiTextfieldEnterGuardsInTree(surfaceEl);
 }

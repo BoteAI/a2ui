@@ -26,6 +26,11 @@ const routers: IRouteProps[] = [
     path: '/a2ui-playgroup/v9',
     component: './a2ui-playgroup/v9',
   },
+  {
+    exact: true,
+    path: '/a2ui-preset-catalog',
+    component: './a2ui-preset-catalog',
+  },
 ];
 
 export default routers;

@@ -1,0 +1,249 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+  color: #2a2b33;
+}
+
+.header {
+  flex-shrink: 0;
+  padding: 20px 32px 16px;
+  border-bottom: 1px solid #e4e4eb;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a2b33;
+  letter-spacing: -0.02em;
+}
+
+.headerUnderline {
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-top: 8px;
+  background: #2a2b33;
+  border-radius: 2px;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex-shrink: 0;
+  width: 220px;
+  overflow-y: auto;
+  padding: 16px 0 32px;
+  border-right: 1px solid #e4e4eb;
+}
+
+.categoryBlock {
+  margin-bottom: 20px;
+}
+
+.categoryLabel {
+  padding: 0 24px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9092a3;
+  letter-spacing: 0.02em;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem {
+  margin: 0;
+}
+
+.navLink {
+  display: block;
+  width: 100%;
+  padding: 6px 24px;
+  border: none;
+  background: transparent;
+  color: #414352;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #2a2b33;
+  }
+}
+
+.navLinkActive {
+  color: #2a2b33;
+  font-weight: 700;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 32px 48px 64px;
+}
+
+.componentTitle {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2a2b33;
+  letter-spacing: -0.02em;
+}
+
+.componentDesc {
+  margin: 0 0 32px;
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #64677a;
+}
+
+.section {
+  margin-bottom: 36px;
+}
+
+.sectionTitle {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2a2b33;
+}
+
+.previewBox {
+  padding: 24px;
+  border: 1px solid #e4e4eb;
+  border-radius: 8px;
+  background: #fafbfd;
+}
+
+.rendererWrap {
+  min-height: 48px;
+}
+
+.messagesEditorWrap {
+  position: relative;
+  border: 1px solid #e4e4eb;
+  border-radius: 8px;
+  background: #f8f9fb;
+  overflow: hidden;
+}
+
+.messageEditor {
+  min-height: 480px;
+  padding: 16px 48px 16px 16px !important;
+  border: none !important;
+  background: transparent !important;
+  resize: vertical;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: #2a2b33;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
+.messageEditorError {
+  margin: 0 16px 16px;
+}
+
+.copyBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #dcdde5;
+  border-radius: 6px;
+  background: #fff;
+  color: #64677a;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: #417ffb;
+    color: #417ffb;
+  }
+}
+
+.propsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th,
+  td {
+    padding: 12px 16px;
+    border: 1px solid #e4e4eb;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: #f5f6fa;
+    font-weight: 600;
+    color: #2a2b33;
+  }
+
+  tr:nth-child(even) td {
+    background: #fafbfd;
+  }
+}
+
+.propName {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  color: #2a2b33;
+}
+
+.typeTag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #e8f5e9;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  color: #2e7d32;
+  white-space: pre-wrap;
+}
+
+.requiredTag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #fff1f0;
+  font-size: 11px;
+  color: #cf1322;
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    display: none;
+  }
+
+  .content {
+    padding: 24px 20px 48px;
+  }
+}
