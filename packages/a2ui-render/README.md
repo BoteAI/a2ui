@@ -166,11 +166,11 @@ import {
 />
 ```
 
-Preset 源码维护在 monorepo 的 `app/src/pages/a2ui-presetComp/`。新增组件：在该目录按模板添加，并在 `manifest.ts` 登记后执行 `yarn build:presets`（或在仓库根目录 `yarn build`，会先构建 preset 再构建各包）。产物输出到本包 `dist/esm/presetComp/`。
+Preset 组件已独立为 `@boteai/a2ui-comp-preset` 包（`packages/a2ui-comp-preset/`）。新增组件：在该包 `src/` 按模板添加，并在 `manifest.ts` 登记后执行 `yarn build`（仓库根目录会构建各包）。
 
-Node 脚本（如配置器 codegen）仅需 schema 时，请使用子路径 `@boteai/a2ui-render/preset-schemas`，避免加载渲染器侧的样式资源。
+Node 脚本（如配置器 codegen）仅需 schema 时，请使用 `@boteai/a2ui-comp-preset/schemas`。
 
-仅需注册表、且需避免与页面代码打包后变量名冲突时，可使用 `@boteai/a2ui-render/preset-registry`。
+仅需注册表时，请使用 `@boteai/a2ui-comp-preset/registry`。
 
 ---
 

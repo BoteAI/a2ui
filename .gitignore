@@ -28,7 +28,7 @@ app/public/*
 
 /packages/*/dist/
 /packages/a2ui-render/src/components/BaseRenderer/generated/antdShadowCss.generated.ts
-app/src/pages/a2ui-presetComp/schemas/
-app/src/pages/a2ui-presetComp/presetSchemas.generated.ts
-app/src/pages/a2ui-presetComp/registry.ts
-app/scripts/a2ui-preset-schema-registry.ts
+packages/a2ui-comp-preset/src/schemas/
+packages/a2ui-comp-preset/src/presetSchemas.generated.ts
+packages/a2ui-comp-preset/src/registry.ts
+packages/a2ui-comp-preset/scripts/a2ui-preset-schema-registry.ts

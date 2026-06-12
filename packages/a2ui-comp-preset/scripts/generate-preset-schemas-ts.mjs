@@ -1,5 +1,5 @@
 /**
- * 读取 src/pages/a2ui-presetComp/schemas/*.schema.json，生成 presetSchemas.generated.ts
+ * 读取 src/schemas/*.schema.json，生成 presetSchemas.generated.ts
  */
 /* eslint-disable no-console */
 import fs from 'fs';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const presetRoot = path.join(root, 'src/pages/a2ui-presetComp');
+const presetRoot = path.join(root, 'src');
 const schemasDir = path.join(presetRoot, 'schemas');
 const manifestPath = path.join(presetRoot, 'manifest.ts');
 const outPath = path.join(presetRoot, 'presetSchemas.generated.ts');
@@ -42,7 +42,7 @@ for (const name of names) {
 const content = `/* eslint-disable */
 /**
  * 本文件由 scripts/generate-preset-schemas-ts.mjs 自动生成，请勿手改。
- * 源: src/pages/a2ui-presetComp/schemas/*.schema.json
+ * 源: src/schemas/*.schema.json
  */
 export const a2uiPresetComponentSchemas: Record<string, unknown> = {
 ${entries.join('\n')}
