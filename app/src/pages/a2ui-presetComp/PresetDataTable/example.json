@@ -1,0 +1,7 @@
+{
+  "component": "PresetDataTable",
+  "id": "table-1",
+  "columns": { "path": "/data/table/columns" },
+  "rows": { "path": "/data/table/rows" },
+  "striped": true
+}

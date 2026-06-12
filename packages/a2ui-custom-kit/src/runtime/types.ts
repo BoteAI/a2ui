@@ -18,10 +18,25 @@ export type A2UIV09ElementContext = {
     path?: string;
     set: (path: string, value: unknown) => void;
     resolveDynamicValue: (value: unknown) => unknown;
+
+    /** 运行时由 @a2ui/web_core DataContext 提供，可通过它获取 SurfaceModel */
+    surface?: unknown;
+
+    /** 创建子路径 DataContext，路径解析复用 DataContext.resolvePath 逻辑 */
+    nested?: (relativePath: string) => unknown;
   };
 
   /** 与官方 Button 相同：由引擎解析 context 中的 path 后分发到 surface.onAction */
   dispatchAction?: (action: { event: { name: string; context?: Record<string, unknown> } }) => void;
+
+  /** 运行时由 @a2ui/web_core ComponentContext 提供 */
+  surface?: unknown;
+
+  /** 运行时由 @a2ui/web_core ComponentContext 提供 */
+  surfaceComponents?: unknown;
+
+  /** 运行时由 @a2ui/web_core ComponentContext 提供 */
+  theme?: unknown;
 };
 
 export type A2UIActionDetail = {

@@ -1,0 +1,14 @@
+{
+  "component": "PresetSelect",
+  "id": "status-select",
+  "value": { "path": "/data/status" },
+  "options": "[{\"label\":\"启用\",\"value\":\"active\"},{\"label\":\"禁用\",\"value\":\"inactive\"}]",
+  "mode": "single",
+  "placeholder": "请选择状态",
+  "allowClear": true,
+  "action": {
+    "event": {
+      "name": "on_status_change"
+    }
+  }
+}

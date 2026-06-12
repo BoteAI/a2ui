@@ -1,0 +1,6 @@
+{
+  "component": "PresetPieChart",
+  "id": "pie-1",
+  "data": { "path": "/data/pie" },
+  "innerRadius": 40
+}

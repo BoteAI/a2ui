@@ -6,7 +6,8 @@
     "bs": "lerna bootstrap",
     "watch": "lerna run --parallel dev",
     "start": "cd app && yarn start",
-    "build": "lerna run build --stream",
+    "build:presets": "yarn --cwd app build:presets",
+    "build": "yarn build:presets && lerna run build --stream",
     "build:comp": "lerna run build --scope @boteai/* --stream",
     "pub": "node scripts/publish.js"
   },

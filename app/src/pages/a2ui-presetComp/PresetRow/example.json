@@ -1,0 +1,7 @@
+{
+  "component": "PresetRow",
+  "id": "row-1",
+  "gap": 16,
+  "justify": "spaceBetween",
+  "children": ["badge-1", "badge-2", "badge-3"]
+}

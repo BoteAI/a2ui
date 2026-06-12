@@ -1,0 +1,3 @@
+/* eslint-disable max-len */
+/** 由 scripts/embedPresetStyles.js 从 PresetBadge/index.less 生成，请勿手改 */
+export default ".preset-badge {\n  display: inline-flex;\n  align-items: center;\n  padding: 2px 10px;\n  border-radius: 9999px;\n  font-size: 12px;\n  font-weight: 500;\n  line-height: 20px;\n  white-space: nowrap;\n}\n.preset-badge--success {\n  color: #065f46;\n  background: #d1fae5;\n}\n.preset-badge--warning {\n  color: #92400e;\n  background: #fef3c7;\n}\n.preset-badge--error {\n  color: #991b1b;\n  background: #fee2e2;\n}\n.preset-badge--info {\n  color: #1e40af;\n  background: #dbeafe;\n}\n.preset-badge--neutral {\n  color: #374151;\n  background: #f3f4f6;\n}\n";

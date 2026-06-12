@@ -78,3 +78,6 @@ export {
   loadRemoteA2UICustomRegistry,
   loadRemoteA2UICustomRegistries,
 } from './remote/loadRemoteA2UICustomRegistry';
+
+export { useRemoteA2UICustomRegistry } from './remote/useRemoteA2UICustomRegistry';
+export type { RemoteA2UIRegistryState } from './remote/useRemoteA2UICustomRegistry';

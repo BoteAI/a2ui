@@ -1,0 +1,6 @@
+{
+  "component": "PresetBadge",
+  "id": "badge-1",
+  "text": { "path": "/data/status" },
+  "variant": "success"
+}

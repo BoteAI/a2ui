@@ -21,6 +21,7 @@ export {
   writeBoundValue,
   dispatchA2UIAction,
   dispatchDeclaredAction,
+  resolveBoundValueRaw,
   type A2UICustomElementHost,
 } from './runtime/elementHost';
 
