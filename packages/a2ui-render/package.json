@@ -22,7 +22,7 @@
     }
   },
   "scripts": {
-    "dev": "node ./scripts/embedShadowCss.js && father dev",
+    "dev": "node ./scripts/checkPresetArtifacts.js && node ./scripts/embedShadowCss.js && father dev --no-clean",
     "build": "node ./scripts/checkPresetArtifacts.js && node ./scripts/embedShadowCss.js && father build --no-clean",
     "build:lit-compat": "node ./scripts/buildLitCompat.js",
     "build:external": "node ./scripts/buildExternal.js",

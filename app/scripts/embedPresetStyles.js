@@ -11,7 +11,7 @@ const less = require('less');
 
 const root = path.resolve(__dirname, '..');
 const presetDir = path.resolve(root, 'src/pages/a2ui-presetComp');
-const themeDir = path.resolve(root, '../packages/a2ui-render/src/assets/theme/less');
+const themeDir = path.resolve(root, 'src/assets/theme/less');
 
 function findLessFiles() {
   const results = [];
