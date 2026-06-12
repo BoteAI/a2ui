@@ -1,6 +1,6 @@
 /**
  * Preset 组件唯一清单（SSOT）。
- * 新增预设组件时：在此追加一项，然后执行 yarn build。
+ * 新增预设组件时：在此追加一项，然后执行 npm run build。
  */
 export const PRESET_COMPONENTS = [
   'PresetBadge',

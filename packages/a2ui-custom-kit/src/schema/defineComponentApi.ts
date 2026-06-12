@@ -16,7 +16,9 @@ export type DefineComponentApiOptions = {
 };
 
 /** 声明自定义组件 API，产出 ComponentApi 供 schema 与类型推断使用 */
-export function defineComponentApi(options: DefineComponentApiOptions): ComponentApi {
+export function defineComponentApi<S extends z.ZodRawShape>(
+  options: DefineComponentApiOptions & { shape: S },
+): ComponentApi<z.ZodObject<S, 'strict'>> {
   return {
     name: options.name,
     schema: z.object(options.shape).strict(),
