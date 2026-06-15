@@ -6,7 +6,7 @@ export const PresetRowApi = defineComponentApi({
   name: 'PresetRow',
   shape: {
     /** 子组件 ID 列表或模板 */
-    children: ChildListSchema,
+    children: ChildListSchema, /** 卡片内容组件 ID */
     /** 子元素间距（像素） */
     gap: z.number().optional(),
     /** 交叉轴（垂直）对齐 */

@@ -13,18 +13,19 @@ type ApiProps = z.infer<typeof PresetColumnApi.schema>;
 type ColumnHostProps = {
   host: A2UICustomElementHost;
   apiProps: ApiProps;
+  buildChildren: (children: unknown, defaultBasePath?: string) => React.ReactNode;
 };
 
-function ColumnHost({ host, apiProps }: ColumnHostProps) {
+function ColumnHost({ host, apiProps, buildChildren }: ColumnHostProps) {
   const widgetProps = useColumnBinding(host, apiProps);
   return (
     <PresetColumnWidget {...widgetProps}>
-      <slot />
+      {buildChildren(apiProps.children)}
     </PresetColumnWidget>
   );
 }
 
-export const PresetColumnElement = createReactComponent(PresetColumnApi, ({ props, host }) => {
+export const PresetColumnElement = createReactComponent(PresetColumnApi, ({ props, host, buildChildren }) => {
   ensureComponentStyles(host, STYLE_KEY, styles);
-  return <ColumnHost host={host} apiProps={props} />;
+  return <ColumnHost host={host} apiProps={props} buildChildren={buildChildren} />;
 });
