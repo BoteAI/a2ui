@@ -13,18 +13,19 @@ type ApiProps = z.infer<typeof PresetRowApi.schema>;
 type RowHostProps = {
   host: A2UICustomElementHost;
   apiProps: ApiProps;
+  buildChildren: (children: unknown, defaultBasePath?: string) => React.ReactNode;
 };
 
-function RowHost({ host, apiProps }: RowHostProps) {
+function RowHost({ host, apiProps, buildChildren }: RowHostProps) {
   const widgetProps = useRowBinding(host, apiProps);
   return (
     <PresetRowWidget {...widgetProps}>
-      <slot />
+      {buildChildren(apiProps.children)}
     </PresetRowWidget>
   );
 }
 
-export const PresetRowElement = createReactComponent(PresetRowApi, ({ props, host }) => {
+export const PresetRowElement = createReactComponent(PresetRowApi, ({ props, host, buildChildren }) => {
   ensureComponentStyles(host, STYLE_KEY, styles);
-  return <RowHost host={host} apiProps={props} />;
+  return <RowHost host={host} apiProps={props} buildChildren={buildChildren} />;
 });

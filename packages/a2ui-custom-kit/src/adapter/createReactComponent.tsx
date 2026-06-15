@@ -1,9 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import type { ComponentApi } from '../schema/webCoreV09Shim';
 import type { z } from 'zod';
 import type { A2UICustomElementHost } from '../runtime/elementHost';
 import { runAfterPropsReady, subscribeV09ComponentUpdates } from '../runtime/subscribeV09Updates';
+import {
+  normalizeChildListInput,
+  resolveChildSlotsFromInput,
+  resolveTemplateChildSlots,
+  type ChildSlotDescriptor,
+} from './childListRuntime';
 
 type SchemaProps<A extends ComponentApi> = z.infer<A['schema']>;
 
@@ -13,6 +19,9 @@ export type ReactA2UICustomRenderProps<A extends ComponentApi> = {
 
   /** 渲染 A2UI 子组件；childId 为组件树中的子节点 ID，basePath 可覆盖数据上下文路径 */
   buildChild: (childId: string, basePath?: string) => React.ReactNode;
+
+  /** 渲染 ChildListSchema 子节点列表（静态 ID 数组或动态 template） */
+  buildChildren: (children: unknown, defaultBasePath?: string) => React.ReactNode;
 };
 
 // ---------------------------------------------------------------------------
@@ -177,13 +186,83 @@ const A2uiChildSlot: React.FC<{
 };
 
 // ---------------------------------------------------------------------------
+// A2uiChildListSlot —— 解析 ChildListSchema 并渲染多个 A2uiChildSlot
+// ---------------------------------------------------------------------------
+
+const A2uiChildListSlot: React.FC<{
+  host: A2UICustomElementHost;
+  childrenRaw: unknown;
+  defaultBasePath?: string;
+}> = ({ host, childrenRaw, defaultBasePath }) => {
+  const normalized = useMemo(() => normalizeChildListInput(childrenRaw), [childrenRaw]);
+  const [templateSlots, setTemplateSlots] = useState<ChildSlotDescriptor[]>([]);
+
+  useEffect(() => {
+    if (normalized.kind !== 'template') {
+      setTemplateSlots([]);
+      return undefined;
+    }
+
+    const dc = host.context?.dataContext;
+    const { componentId, path } = normalized;
+
+    const applyListValue = (listValue: unknown) => {
+      setTemplateSlots(resolveTemplateChildSlots(host, componentId, path, listValue));
+    };
+
+    if (dc && typeof dc.subscribeDynamicValue === 'function') {
+      const bound = dc.subscribeDynamicValue({ path }, applyListValue);
+      applyListValue(bound.value);
+      return () => bound.unsubscribe();
+    }
+
+    if (dc && typeof dc.resolveDynamicValue === 'function') {
+      try {
+        applyListValue(dc.resolveDynamicValue({ path }));
+      } catch {
+        applyListValue([]);
+      }
+    } else {
+      applyListValue([]);
+    }
+
+    return undefined;
+  }, [host, normalized]);
+
+  const slots = useMemo(() => {
+    if (normalized.kind === 'template') {
+      return templateSlots;
+    }
+    return resolveChildSlotsFromInput(host, normalized, defaultBasePath);
+  }, [host, normalized, templateSlots, defaultBasePath]);
+
+  if (slots.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {slots.map((slot, index) => (
+        <A2uiChildSlot
+          key={`${slot.childId}-${slot.basePath}-${index}`}
+          host={host}
+          childId={slot.childId}
+          basePath={slot.basePath}
+        />
+      ))}
+    </>
+  );
+};
+
+// ---------------------------------------------------------------------------
 // createReactComponent 工厂
 // ---------------------------------------------------------------------------
 
 /**
  * 用 React 写视图，对外仍产出 CustomElementConstructor，供 LitSurfaceHost customComponents 注册。
  * props 来自引擎归一化后的 componentProps；复杂双向绑定请使用 host.context.dataContext。
- * buildChild(childId, basePath?) 可渲染 A2UI 子组件。
+ * buildChild(childId, basePath?) 可渲染单个 A2UI 子组件。
+ * buildChildren(children, defaultBasePath?) 可渲染 ChildListSchema 子节点列表。
  */
 export function createReactComponent<A extends ComponentApi>(
   api: A,
@@ -230,10 +309,25 @@ export function createReactComponent<A extends ComponentApi>(
       });
     }
 
+    /** 渲染 ChildListSchema 子节点列表为 React 节点 */
+    private buildChildren(childrenRaw: unknown, defaultBasePath?: string): React.ReactNode {
+      return React.createElement(A2uiChildListSlot, {
+        key: `children-${JSON.stringify(childrenRaw)}`,
+        host: this,
+        childrenRaw,
+        defaultBasePath,
+      });
+    }
+
     private paint() {
       if (!this.mountRoot) return;
       const props = (this.componentProps ?? {}) as SchemaProps<A>;
-      const tree = render({ props, host: this, buildChild: (id, path) => this.buildChild(id, path) });
+      const tree = render({
+        props,
+        host: this,
+        buildChild: (id, path) => this.buildChild(id, path),
+        buildChildren: (children, path) => this.buildChildren(children, path),
+      });
       ReactDOM.render(<>{tree}</>, this.mountRoot);
     }
   }

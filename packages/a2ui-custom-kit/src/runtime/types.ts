@@ -24,6 +24,12 @@ export type A2UIV09ElementContext = {
 
     /** 创建子路径 DataContext，路径解析复用 DataContext.resolvePath 逻辑 */
     nested?: (relativePath: string) => unknown;
+
+    /** 订阅 DataModel 动态值变化，运行时由 @a2ui/web_core DataContext 提供 */
+    subscribeDynamicValue?: (
+      binding: { path: string },
+      onChange: (value: unknown) => void,
+    ) => { value: unknown; unsubscribe: () => void };
   };
 
   /** 与官方 Button 相同：由引擎解析 context 中的 path 后分发到 surface.onAction */

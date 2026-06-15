@@ -11,4 +11,4 @@ import { PresetColumnElement } from './element';
  * 原生 LitElement 的 renderNode() 可正确递归渲染子组件；
  * createReactComponent 产出的是无 Shadow DOM 的 HTMLElement，<slot/> 无法投射子组件。
  */
-export const a2uiRemoteRegistry = mergeRegistryEntries(defineRegistryEntry(PresetColumnApi, PresetColumnElement, { tagName: 'a2ui-basic-column' }));
+export const a2uiRemoteRegistry = mergeRegistryEntries(defineRegistryEntry(PresetColumnApi, PresetColumnElement));
