@@ -19,6 +19,7 @@ export type PlaygroundEditorProps = {
   themePreset: A2UIThemePreset;
   customComponents: A2UICustomComponentRegistry;
   patchMessages?: (messages: A2UIMessage[], themePreset: A2UIThemePreset, demo: string) => A2UIMessage[];
+  injectAntdStylesInShadow?: boolean;
   demoId?: string;
 };
 
@@ -33,6 +34,7 @@ const PlaygroundEditor: React.FC<PlaygroundEditorProps> = ({
   themePreset,
   customComponents,
   patchMessages,
+  injectAntdStylesInShadow,
   demoId = '',
 }) => {
   const [messages, setMessages] = useState<A2UIMessage[]>(initialMessages);
@@ -138,6 +140,7 @@ const PlaygroundEditor: React.FC<PlaygroundEditorProps> = ({
                 onAction={handleAction}
                 customComponents={customComponents}
                 themePreset={themePreset}
+                injectAntdStylesInShadow={injectAntdStylesInShadow}
               />
             </div>
           </div>

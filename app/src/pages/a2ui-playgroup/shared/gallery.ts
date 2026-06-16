@@ -60,10 +60,10 @@ function titleFromSlug(slug: string): string {
 
 function inferGalleryCategory(id: string): Exclude<GalleryCategoryId, 'all'> {
   if (/login|form|notification|email-compose|advanced-form|live-invitation/.test(id)) return 'form';
-  if (/stats|financial|dashboard|workout|step-counter|account-balance|track-list|countdown/.test(id)) {
+  if (/stats|financial|dashboard|workout|step-counter|account-balance|track-list|countdown|preset-sales|preset-ops|preset-analytics/.test(id)) {
     return 'data';
   }
-  if (/modal|markdown|child-list|incremental|remote-showcase|calendar|flight|weather/.test(id)) {
+  if (/modal|markdown|child-list|incremental|remote-showcase|calendar|flight|weather|preset-flight/.test(id)) {
     return 'special';
   }
   return 'card';

@@ -1,0 +1,181 @@
+{
+  "name": "Preset Analytics Report",
+  "description": "Preset 组合示例：双列布局嵌套 Row/Column，组合饼图、柱状图与多组 KPI，模拟数据分析报告页。",
+  "messages": [
+    {
+      "version": "v0.9",
+      "createSurface": {
+        "surfaceId": "gallery-preset-analytics-report",
+        "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+        "sendDataModel": true
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateComponents": {
+        "surfaceId": "gallery-preset-analytics-report",
+        "components": [
+          {
+            "id": "root",
+            "component": "PresetColumn",
+            "gap": 16,
+            "align": "stretch",
+            "children": ["page-title", "kpi-row", "main-content"]
+          },
+          {
+            "id": "page-title",
+            "component": "PresetTitle",
+            "text": "用户行为分析报告",
+            "level": "h1"
+          },
+          {
+            "id": "kpi-row",
+            "component": "PresetRow",
+            "gap": 12,
+            "children": ["kpi-dau", "kpi-retention", "kpi-session"]
+          },
+          {
+            "id": "kpi-dau",
+            "component": "PresetMetric",
+            "label": "日活用户",
+            "value": "48,320",
+            "trend": "up",
+            "trendValue": "+5.1%"
+          },
+          {
+            "id": "kpi-retention",
+            "component": "PresetMetric",
+            "label": "7 日留存",
+            "value": "62.4%",
+            "trend": "up",
+            "trendValue": "+1.8%"
+          },
+          {
+            "id": "kpi-session",
+            "component": "PresetMetric",
+            "label": "平均会话",
+            "value": "4m 32s",
+            "trend": "down",
+            "trendValue": "-0.6%"
+          },
+          {
+            "id": "main-content",
+            "component": "PresetRow",
+            "gap": 12,
+            "align": "stretch",
+            "children": ["left-col", "right-col"]
+          },
+          {
+            "id": "left-col",
+            "component": "PresetColumn",
+            "gap": 12,
+            "align": "stretch",
+            "children": ["card-channel", "card-region"]
+          },
+          {
+            "id": "card-channel",
+            "component": "PresetDashboardCard",
+            "title": "渠道占比",
+            "subtitle": "本周新增用户",
+            "child": "channel-pie"
+          },
+          {
+            "id": "channel-pie",
+            "component": "PresetPieChart",
+            "showLegend": true,
+            "innerRadius": 0,
+            "data": [
+              { "label": "自然搜索", "value": 38, "color": "#417ffb" },
+              { "label": "广告投放", "value": 28, "color": "#722ed1" },
+              { "label": "社交分享", "value": 22, "color": "#52c41a" },
+              { "label": "直接访问", "value": 12, "color": "#faad14" }
+            ]
+          },
+          {
+            "id": "card-region",
+            "component": "PresetDashboardCard",
+            "title": "区域分布",
+            "subtitle": "Top 5 城市",
+            "child": "region-table"
+          },
+          {
+            "id": "region-table",
+            "component": "PresetDataTable",
+            "columns": [
+              { "key": "city", "label": "城市" },
+              { "key": "users", "label": "用户数" },
+              { "key": "growth", "label": "增长" }
+            ],
+            "rows": [
+              { "city": "上海", "users": "12,480", "growth": "+8.2%" },
+              { "city": "北京", "users": "10,920", "growth": "+6.5%" },
+              { "city": "深圳", "users": "8,640", "growth": "+11.3%" },
+              { "city": "杭州", "users": "6,210", "growth": "+4.7%" },
+              { "city": "成都", "users": "5,880", "growth": "+9.1%" }
+            ]
+          },
+          {
+            "id": "right-col",
+            "component": "PresetColumn",
+            "gap": 12,
+            "align": "stretch",
+            "children": ["card-weekly", "status-badges"]
+          },
+          {
+            "id": "card-weekly",
+            "component": "PresetDashboardCard",
+            "title": "周活跃趋势",
+            "subtitle": "近 7 天",
+            "child": "weekly-bar"
+          },
+          {
+            "id": "weekly-bar",
+            "component": "PresetBarChart",
+            "color": "#52c41a",
+            "data": [
+              { "label": "周一", "value": 4200 },
+              { "label": "周二", "value": 4580 },
+              { "label": "周三", "value": 5120 },
+              { "label": "周四", "value": 4890 },
+              { "label": "周五", "value": 5340 },
+              { "label": "周六", "value": 3680 },
+              { "label": "周日", "value": 3210 }
+            ]
+          },
+          {
+            "id": "status-badges",
+            "component": "PresetRow",
+            "gap": 8,
+            "children": ["badge-active", "badge-new", "badge-churn"]
+          },
+          {
+            "id": "badge-active",
+            "component": "PresetBadge",
+            "text": "活跃增长",
+            "variant": "success"
+          },
+          {
+            "id": "badge-new",
+            "component": "PresetBadge",
+            "text": "新用户 +12%",
+            "variant": "info"
+          },
+          {
+            "id": "badge-churn",
+            "component": "PresetBadge",
+            "text": "流失预警",
+            "variant": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateDataModel": {
+        "surfaceId": "gallery-preset-analytics-report",
+        "path": "/",
+        "value": {}
+      }
+    }
+  ]
+}

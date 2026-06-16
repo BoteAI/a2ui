@@ -1,0 +1,102 @@
+{
+  "name": "Preset Flight Booking",
+  "description": "Preset 组合示例：城市选择 + 航班卡片 + 预订按钮，模拟机票预订流程页面。",
+  "messages": [
+    {
+      "version": "v0.9",
+      "createSurface": {
+        "surfaceId": "gallery-preset-flight-booking",
+        "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+        "sendDataModel": true
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateComponents": {
+        "surfaceId": "gallery-preset-flight-booking",
+        "components": [
+          {
+            "id": "root",
+            "component": "PresetColumn",
+            "gap": 16,
+            "align": "stretch",
+            "children": ["page-title", "filter-row", "flight-card", "book-btn"]
+          },
+          {
+            "id": "page-title",
+            "component": "PresetTitle",
+            "text": "选择航班",
+            "level": "h1"
+          },
+          {
+            "id": "filter-row",
+            "component": "PresetRow",
+            "gap": 12,
+            "align": "center",
+            "children": ["filter-label", "city-select"]
+          },
+          {
+            "id": "filter-label",
+            "component": "PresetTitle",
+            "text": "目的地",
+            "level": "h3"
+          },
+          {
+            "id": "city-select",
+            "component": "PresetSelect",
+            "value": "bj",
+            "placeholder": "请选择目的地",
+            "showSearch": true,
+            "allowClear": true,
+            "options": "[{\"label\":\"北京\",\"value\":\"bj\"},{\"label\":\"上海\",\"value\":\"sh\"},{\"label\":\"深圳\",\"value\":\"sz\"},{\"label\":\"成都\",\"value\":\"cd\"}]",
+            "action": {
+              "event": { "name": "on_city_change" }
+            }
+          },
+          {
+            "id": "flight-card",
+            "component": "PresetFlightCard",
+            "airline": "中国东方航空",
+            "airlineLogo": "https://picsum.photos/seed/cea/48/48",
+            "flightNumber": "MU 5101",
+            "origin": "SHA",
+            "destination": "PEK",
+            "date": "2026-06-28 周一",
+            "departureTime": "08:30",
+            "arrivalTime": "10:45",
+            "duration": "2h 15m",
+            "status": "准点",
+            "statusColor": "#52c41a",
+            "price": "¥1,280",
+            "action": {
+              "event": { "name": "on_view_flight" }
+            }
+          },
+          {
+            "id": "book-btn",
+            "component": "PresetButton",
+            "variant": "primary",
+            "child": "book-label",
+            "action": {
+              "event": { "name": "on_book_flight" }
+            }
+          },
+          {
+            "id": "book-label",
+            "component": "PresetTitle",
+            "text": "立即预订",
+            "level": "h3"
+          }
+        ]
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateDataModel": {
+        "surfaceId": "gallery-preset-flight-booking",
+        "path": "/",
+        "value": { "city": "bj" }
+      }
+    }
+  ]
+}

@@ -6,6 +6,8 @@ import { a2uiV9CustomComponents } from './remoteRegistry';
 import { V9_GALLERY_ITEMS, V9_REMOTE_SHOWCASE_ID, V9_CUSTOM_COMPONENTS_GUIDE_PATH } from './gallery';
 import type { GalleryItem } from '../shared/gallery';
 
+const V9_PRESET_CATALOG_PATH = '/a2ui-preset-catalog';
+
 const REMOTE_SHOWCASE_ITEM: GalleryItem = {
   id: V9_REMOTE_SHOWCASE_ID,
   label: '自定义组件示例集',
@@ -15,9 +17,17 @@ const REMOTE_SHOWCASE_ITEM: GalleryItem = {
   guideUrl: V9_CUSTOM_COMPONENTS_GUIDE_PATH,
 };
 
+function withPresetCatalogLink(items: GalleryItem[]): GalleryItem[] {
+  return items.map((item) => (
+    item.id.startsWith('preset-')
+      ? { ...item, guideUrl: V9_PRESET_CATALOG_PATH }
+      : item
+  ));
+}
+
 const A2UIPlaygroupV9: React.FC = () => {
   const galleryItems = useMemo(
-    () => [REMOTE_SHOWCASE_ITEM, ...V9_GALLERY_ITEMS],
+    () => withPresetCatalogLink([REMOTE_SHOWCASE_ITEM, ...V9_GALLERY_ITEMS]),
     [],
   );
 
@@ -27,6 +37,7 @@ const A2UIPlaygroupV9: React.FC = () => {
       protocolVersion="0.9"
       galleryItems={galleryItems}
       customComponents={a2uiV9CustomComponents}
+      injectAntdStylesInShadow
       peerPath="/a2ui-playgroup/v8"
       peerLabel="协议 0.8"
     />

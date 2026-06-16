@@ -1,0 +1,111 @@
+{
+  "name": "Preset Sales Dashboard",
+  "description": "Preset 组合示例：标题 + 三列 KPI 指标 + 柱状图与数据表格，模拟销售仪表盘页面。",
+  "messages": [
+    {
+      "version": "v0.9",
+      "createSurface": {
+        "surfaceId": "gallery-preset-sales-dashboard",
+        "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+        "sendDataModel": true
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateComponents": {
+        "surfaceId": "gallery-preset-sales-dashboard",
+        "components": [
+          {
+            "id": "root",
+            "component": "PresetColumn",
+            "gap": 16,
+            "align": "stretch",
+            "children": ["page-title", "metrics-row", "chart-card", "orders-table"]
+          },
+          {
+            "id": "page-title",
+            "component": "PresetTitle",
+            "text": "销售概览",
+            "level": "h1"
+          },
+          {
+            "id": "metrics-row",
+            "component": "PresetRow",
+            "gap": 12,
+            "align": "stretch",
+            "children": ["metric-revenue", "metric-orders", "metric-conversion"]
+          },
+          {
+            "id": "metric-revenue",
+            "component": "PresetMetric",
+            "label": "总营收",
+            "value": "¥284,500",
+            "trend": "up",
+            "trendValue": "+18.6%"
+          },
+          {
+            "id": "metric-orders",
+            "component": "PresetMetric",
+            "label": "订单数",
+            "value": "1,248",
+            "trend": "up",
+            "trendValue": "+6.3%"
+          },
+          {
+            "id": "metric-conversion",
+            "component": "PresetMetric",
+            "label": "转化率",
+            "value": "3.8%",
+            "trend": "down",
+            "trendValue": "-0.4%"
+          },
+          {
+            "id": "chart-card",
+            "component": "PresetDashboardCard",
+            "title": "月度营收趋势",
+            "subtitle": "近 6 个月",
+            "child": "revenue-chart"
+          },
+          {
+            "id": "revenue-chart",
+            "component": "PresetBarChart",
+            "color": "#417ffb",
+            "valuePrefix": "¥",
+            "valueSuffix": "万",
+            "data": [
+              { "label": "1月", "value": 38 },
+              { "label": "2月", "value": 42 },
+              { "label": "3月", "value": 45 },
+              { "label": "4月", "value": 52 },
+              { "label": "5月", "value": 48 },
+              { "label": "6月", "value": 58 }
+            ]
+          },
+          {
+            "id": "orders-table",
+            "component": "PresetDataTable",
+            "columns": [
+              { "key": "orderId", "label": "订单号" },
+              { "key": "customer", "label": "客户" },
+              { "key": "amount", "label": "金额" },
+              { "key": "status", "label": "状态" }
+            ],
+            "rows": [
+              { "orderId": "SO-1024", "customer": "华东科技", "amount": "¥12,800", "status": "已完成" },
+              { "orderId": "SO-1025", "customer": "星辰贸易", "amount": "¥8,450", "status": "配送中" },
+              { "orderId": "SO-1026", "customer": "云图网络", "amount": "¥21,300", "status": "待付款" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateDataModel": {
+        "surfaceId": "gallery-preset-sales-dashboard",
+        "path": "/",
+        "value": {}
+      }
+    }
+  ]
+}

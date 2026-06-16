@@ -56,6 +56,7 @@ export type GalleryPlaygroundProps = {
   galleryItems: GalleryItem[];
   customComponents: A2UICustomComponentRegistry;
   patchMessages?: (messages: A2UIMessage[], themePreset: A2UIThemePreset, demo: string) => A2UIMessage[];
+  injectAntdStylesInShadow?: boolean;
   peerPath?: string;
   peerLabel?: string;
 };
@@ -93,6 +94,7 @@ const GalleryPlayground: React.FC<GalleryPlaygroundProps> = ({
   galleryItems,
   customComponents,
   patchMessages,
+  injectAntdStylesInShadow,
   peerPath,
   peerLabel,
 }) => {
@@ -298,6 +300,7 @@ const GalleryPlayground: React.FC<GalleryPlaygroundProps> = ({
                 protocolVersion={protocolVersion}
                 customComponents={customComponents}
                 previewMessages={getPreviewMessages(item)}
+                injectAntdStylesInShadow={injectAntdStylesInShadow}
                 isFavorite={favorites.has(item.id)}
                 onToggleFavorite={toggleFavorite}
                 onOpen={setActiveItem}
@@ -331,6 +334,7 @@ const GalleryPlayground: React.FC<GalleryPlaygroundProps> = ({
                 protocolVersion={protocolVersion}
                 customComponents={customComponents}
                 themePreset={themePreset}
+                injectAntdStylesInShadow={injectAntdStylesInShadow}
                 onAction={() => {}}
               />
             </div>
@@ -398,6 +402,7 @@ const GalleryPlayground: React.FC<GalleryPlaygroundProps> = ({
             themePreset={themePreset}
             customComponents={customComponents}
             patchMessages={patchMessages}
+            injectAntdStylesInShadow={injectAntdStylesInShadow}
           />
         ) : null}
       </Modal>

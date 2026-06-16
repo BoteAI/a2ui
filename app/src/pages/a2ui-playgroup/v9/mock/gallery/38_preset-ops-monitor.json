@@ -1,0 +1,158 @@
+{
+  "name": "Preset Ops Monitor",
+  "description": "Preset 组合示例：状态徽章 + 双列仪表盘卡片 + 饼图与指标卡，模拟运维监控面板。",
+  "messages": [
+    {
+      "version": "v0.9",
+      "createSurface": {
+        "surfaceId": "gallery-preset-ops-monitor",
+        "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+        "sendDataModel": true
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateComponents": {
+        "surfaceId": "gallery-preset-ops-monitor",
+        "components": [
+          {
+            "id": "root",
+            "component": "PresetColumn",
+            "gap": 16,
+            "align": "stretch",
+            "children": ["header-row", "cards-row", "bottom-row"]
+          },
+          {
+            "id": "header-row",
+            "component": "PresetRow",
+            "gap": 12,
+            "justify": "spaceBetween",
+            "align": "center",
+            "children": ["page-title", "status-badges"]
+          },
+          {
+            "id": "page-title",
+            "component": "PresetTitle",
+            "text": "系统监控",
+            "level": "h2"
+          },
+          {
+            "id": "status-badges",
+            "component": "PresetRow",
+            "gap": 8,
+            "children": ["badge-ok", "badge-warn", "badge-info"]
+          },
+          {
+            "id": "badge-ok",
+            "component": "PresetBadge",
+            "text": "API 正常",
+            "variant": "success"
+          },
+          {
+            "id": "badge-warn",
+            "component": "PresetBadge",
+            "text": "队列延迟",
+            "variant": "warning"
+          },
+          {
+            "id": "badge-info",
+            "component": "PresetBadge",
+            "text": "3 个告警",
+            "variant": "info"
+          },
+          {
+            "id": "cards-row",
+            "component": "PresetRow",
+            "gap": 12,
+            "align": "stretch",
+            "children": ["card-cpu", "card-memory"]
+          },
+          {
+            "id": "card-cpu",
+            "component": "PresetDashboardCard",
+            "title": "CPU 使用率",
+            "subtitle": "过去 1 小时",
+            "child": "metric-cpu"
+          },
+          {
+            "id": "metric-cpu",
+            "component": "PresetMetric",
+            "label": "当前负载",
+            "value": "42%",
+            "trend": "neutral",
+            "trendValue": "稳定"
+          },
+          {
+            "id": "card-memory",
+            "component": "PresetDashboardCard",
+            "title": "内存占用",
+            "subtitle": "8 GB 总量",
+            "child": "metric-memory"
+          },
+          {
+            "id": "metric-memory",
+            "component": "PresetMetric",
+            "label": "已使用",
+            "value": "5.6 GB",
+            "trend": "up",
+            "trendValue": "+12%"
+          },
+          {
+            "id": "bottom-row",
+            "component": "PresetRow",
+            "gap": 12,
+            "align": "stretch",
+            "children": ["card-traffic", "card-errors"]
+          },
+          {
+            "id": "card-traffic",
+            "component": "PresetDashboardCard",
+            "title": "流量分布",
+            "subtitle": "按端类型",
+            "child": "traffic-pie"
+          },
+          {
+            "id": "traffic-pie",
+            "component": "PresetPieChart",
+            "showLegend": true,
+            "innerRadius": 36,
+            "data": [
+              { "label": "Web", "value": 52, "color": "#417ffb" },
+              { "label": "Mobile", "value": 31, "color": "#52c41a" },
+              { "label": "API", "value": 17, "color": "#faad14" }
+            ]
+          },
+          {
+            "id": "card-errors",
+            "component": "PresetDashboardCard",
+            "title": "错误日志",
+            "subtitle": "最近 24 小时",
+            "child": "error-table"
+          },
+          {
+            "id": "error-table",
+            "component": "PresetDataTable",
+            "columns": [
+              { "key": "time", "label": "时间" },
+              { "key": "service", "label": "服务" },
+              { "key": "level", "label": "级别" }
+            ],
+            "rows": [
+              { "time": "14:32", "service": "auth", "level": "WARN" },
+              { "time": "13:18", "service": "payment", "level": "ERROR" },
+              { "time": "11:05", "service": "gateway", "level": "INFO" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "version": "v0.9",
+      "updateDataModel": {
+        "surfaceId": "gallery-preset-ops-monitor",
+        "path": "/",
+        "value": {}
+      }
+    }
+  ]
+}

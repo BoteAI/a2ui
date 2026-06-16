@@ -17,6 +17,7 @@ export type DemoCardProps = {
   protocolVersion: '0.8' | '0.9';
   customComponents: A2UICustomComponentRegistry;
   previewMessages?: A2UIMessage[];
+  injectAntdStylesInShadow?: boolean;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
   onOpen: (item: GalleryItem) => void;
@@ -30,6 +31,7 @@ const DemoCard: React.FC<DemoCardProps> = ({
   protocolVersion,
   customComponents,
   previewMessages,
+  injectAntdStylesInShadow,
   isFavorite,
   onToggleFavorite,
   onOpen,
@@ -70,6 +72,7 @@ const DemoCard: React.FC<DemoCardProps> = ({
               protocolVersion={protocolVersion}
               customComponents={customComponents}
               themePreset={themePreset}
+              injectAntdStylesInShadow={injectAntdStylesInShadow}
               onAction={() => {}}
               silentOnError
             />
