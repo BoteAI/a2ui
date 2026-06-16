@@ -29,6 +29,7 @@ Open in your browser:
 |------|-----|
 | **Playground v0.9** (default) | [http://localhost:8000/#/a2ui-playgroup/v9](http://localhost:8000/#/a2ui-playgroup/v9) |
 | Playground v0.8 | [http://localhost:8000/#/a2ui-playgroup/v8](http://localhost:8000/#/a2ui-playgroup/v8) |
+| **Preset component catalog** | [http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect](http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect) |
 | Custom component guide | [http://localhost:8000/#/a2ui-playgroup/v9/custom-components-guide](http://localhost:8000/#/a2ui-playgroup/v9/custom-components-guide) |
 
 Alternatively: `cd app && yarn dev` — same as `yarn start` from the repo root.
@@ -173,6 +174,17 @@ See [Try the Playground](#try-the-playground) for how to start the app locally.
 
 The official A2UI catalog covers core layout and input primitives. **`@boteai/a2ui-comp-preset`** ships a curated set of **production-ready Preset components** — data tables, charts, metrics, dashboard cards, and more — so integrators can use richer UI without building everything from scratch.
 
+![A2UI Preset Component Catalog — browse, preview, and edit Messages JSON](./app/public/assets/presetComp.png)
+
+The Playground includes a **Preset Component Catalog** (`/a2ui-preset-catalog`). Browse all 12 components by category (layout, content, data display, interactive, card), preview live rendering, inspect props, and edit Messages JSON inline.
+
+| Page | URL |
+|------|-----|
+| **Preset catalog** (example: Select) | [http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect](http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect) |
+| Preset catalog (index) | [http://localhost:8000/#/a2ui-preset-catalog](http://localhost:8000/#/a2ui-preset-catalog) |
+
+> Full component reference (props, examples, how to add new presets): [`packages/a2ui-comp-preset/README.md`](./packages/a2ui-comp-preset/README.md)
+
 | Component | Description |
 |-----------|-------------|
 | `PresetTitle` | Section / page title |
@@ -208,7 +220,7 @@ import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
 | `@boteai/a2ui-comp-preset/registry` | `a2uiPresetComponentRegistry` | Runtime rendering only |
 | `@boteai/a2ui-comp-preset/schemas` | `a2uiPresetComponentSchemas` | Agent prompts, configurators, codegen |
 
-To add a new Preset component: create a folder under `packages/a2ui-comp-preset/src/`, register the name in `manifest.ts`, then run `yarn build`. The build script auto-generates `registry.ts`, per-component JSON Schemas, and embedded Less styles.
+To add a new Preset component: create a folder under `packages/a2ui-comp-preset/src/`, register the name in `manifest.ts`, then run `yarn build`. The build script auto-generates `registry.ts`, per-component JSON Schemas, and embedded Less styles. See [`packages/a2ui-comp-preset/README.md`](./packages/a2ui-comp-preset/README.md) for the full component list and step-by-step guide.
 
 ### 6. Roadmap — More Preset Components
 
@@ -377,6 +389,7 @@ yarn pub a2ui-comp-preset 0.1.0
 
 - [A2UI protocol (Google)](https://github.com/google/A2UI)
 - [Repository](https://github.com/BoteAI/a2ui)
+- [Preset component reference](./packages/a2ui-comp-preset/README.md)
 
 ---
 

@@ -29,6 +29,7 @@ yarn start       # 启动 Playground 开发服务
 |------|------|
 | **Playground v0.9**（默认） | [http://localhost:8000/#/a2ui-playgroup/v9](http://localhost:8000/#/a2ui-playgroup/v9) |
 | Playground v0.8 | [http://localhost:8000/#/a2ui-playgroup/v8](http://localhost:8000/#/a2ui-playgroup/v8) |
+| **Preset 预设组件目录** | [http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect](http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect) |
 | 自定义组件开发指南 | [http://localhost:8000/#/a2ui-playgroup/v9/custom-components-guide](http://localhost:8000/#/a2ui-playgroup/v9/custom-components-guide) |
 
 也可进入 `app` 目录执行 `yarn dev`，效果与根目录 `yarn start` 相同。
@@ -173,6 +174,17 @@ const customComponents = mergeRegistryEntries(localRegistry, remote);
 
 官方 A2UI catalog 覆盖核心布局与输入类组件。**`@boteai/a2ui-comp-preset`** 提供一批 **开箱即用的 Preset 组件** — 数据表格、图表、指标卡、仪表盘卡片等 — 让接入方无需从零实现常见 UI。
 
+![A2UI 预设组件目录 — 分类浏览、实时预览与 Messages 编辑](./app/public/assets/presetComp.png)
+
+Playground 内置 **Preset 预设组件目录**（`/a2ui-preset-catalog`），可按分类（布局、内容、数据展示、交互、卡片）浏览全部 12 个组件，实时预览渲染效果、查看 Props 定义，并在线编辑 Messages JSON。
+
+| 页面 | 地址 |
+|------|------|
+| **预设组件目录**（示例：Select） | [http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect](http://localhost:8000/#/a2ui-preset-catalog?component=PresetSelect) |
+| 预设组件目录（首页） | [http://localhost:8000/#/a2ui-preset-catalog](http://localhost:8000/#/a2ui-preset-catalog) |
+
+> 完整组件说明（Props、JSON 示例、新增组件指南）：[`packages/a2ui-comp-preset/README.md`](./packages/a2ui-comp-preset/README.md)
+
 | 组件 | 说明 |
 |------|------|
 | `PresetTitle` | 区块 / 页面标题 |
@@ -208,7 +220,7 @@ import { a2uiPresetComponentRegistry } from '@boteai/a2ui-comp-preset';
 | `@boteai/a2ui-comp-preset/registry` | `a2uiPresetComponentRegistry` | 仅运行时渲染 |
 | `@boteai/a2ui-comp-preset/schemas` | `a2uiPresetComponentSchemas` | Agent 提示词、配置器、codegen |
 
-新增 Preset 组件：在 `packages/a2ui-comp-preset/src/` 下按模板添加组件目录，在 `manifest.ts` 登记组件名，然后执行 `yarn build`。构建脚本会自动生成 `registry.ts`、各组件 JSON Schema 与内嵌 Less 样式。
+新增 Preset 组件：在 `packages/a2ui-comp-preset/src/` 下按模板添加组件目录，在 `manifest.ts` 登记组件名，然后执行 `yarn build`。构建脚本会自动生成 `registry.ts`、各组件 JSON Schema 与内嵌 Less 样式。完整组件清单与操作步骤见 [`packages/a2ui-comp-preset/README.md`](./packages/a2ui-comp-preset/README.md)。
 
 ### 6. 路线图 — 更多 Preset 组件
 
@@ -377,6 +389,7 @@ yarn pub a2ui-comp-preset 0.1.0
 
 - [A2UI 协议（Google）](https://github.com/google/A2UI)
 - [本仓库](https://github.com/BoteAI/a2ui)
+- [Preset 预设组件说明](./packages/a2ui-comp-preset/README.md)
 
 ---
 
