@@ -3,6 +3,7 @@ import {
   dispatchA2UIAction,
   dispatchDeclaredAction,
   resolveBoundValue,
+  resolveBoundValueRaw,
   writeBoundValue,
   type A2UICustomElementHost,
 } from '@boteai/a2ui-custom-kit';
@@ -86,7 +87,10 @@ export function useSelectBinding(host: A2UICustomElementHost, apiProps: ApiProps
     [host, apiProps.value, mode],
   );
 
-  const options = useMemo(() => parseOptions(readBoundString(host, apiProps.options)), [host, apiProps.options]);
+  const options = useMemo(
+    () => parseOptions(resolveBoundValueRaw(host, apiProps.options)),
+    [host, apiProps.options],
+  );
 
   const [value, setValue] = useState<string | string[] | undefined>(fromEngine);
 
