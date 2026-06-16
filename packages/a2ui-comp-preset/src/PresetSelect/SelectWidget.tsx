@@ -67,6 +67,7 @@ export function SelectWidget({
           placeholder={placeholder ?? (isMultiple ? '请选择' : '请选择')}
           disabled={disabled}
           showSearch={showSearch}
+          optionFilterProp="label"
           allowClear={allowClear}
           style={{ width: '100%' }}
         />
