@@ -265,7 +265,7 @@ ${schemaEntries.join('\n')}
   console.log(`[build] schema 完成（${docs.length} 个）→ src/schemas/ + presetSchemas.generated.ts`);
 }
 
-// ─── 4. 仅打包 exports 声明的 3 个入口 ───────────────────────────────────────
+// ─── 4. 仅打包根入口所需产物 ────────────────────────────────────────────────
 
 const BUNDLE_EXTERNALS = [
   'react',
@@ -276,13 +276,14 @@ const BUNDLE_EXTERNALS = [
   'zod',
 ];
 
-/** 与 package.json exports 一致，dist/esm 只保留这 6 个文件 */
+/** 与 package.json exports 一致，dist/esm 只保留根入口所需产物 */
 function writeExportArtifacts() {
   fs.writeFileSync(
     path.join(distDir, 'index.js'),
     [
       "export { a2uiPresetComponentRegistry } from './registry.js';",
       "export { a2uiPresetComponentSchemas } from './presetSchemas.js';",
+      "export { PRESET_COMPONENTS as A2UI_PRESET_COMPONENT_TYPES } from './manifest.js';",
       '',
     ].join('\n'),
   );
@@ -291,6 +292,7 @@ function writeExportArtifacts() {
     [
       "export { a2uiPresetComponentRegistry } from './registry';",
       "export { a2uiPresetComponentSchemas } from './presetSchemas';",
+      "export { PRESET_COMPONENTS as A2UI_PRESET_COMPONENT_TYPES } from './manifest';",
       '',
     ].join('\n'),
   );
@@ -306,6 +308,10 @@ function writeExportArtifacts() {
     path.join(distDir, 'presetSchemas.d.ts'),
     'export declare const a2uiPresetComponentSchemas: Record<string, unknown>;\n',
   );
+  fs.writeFileSync(
+    path.join(distDir, 'manifest.d.ts'),
+    'export declare const PRESET_COMPONENTS: readonly string[];\n',
+  );
 }
 
 async function compileEsm() {
@@ -316,6 +322,7 @@ async function compileEsm() {
     entryPoints: {
       registry: path.join(srcDir, 'registry.ts'),
       presetSchemas: path.join(srcDir, 'presetSchemas.ts'),
+      manifest: path.join(srcDir, 'manifest.ts'),
     },
     outdir: distDir,
     bundle: true,
@@ -344,7 +351,7 @@ async function compileEsm() {
   } else {
     await esbuild.build(esbuildOptions);
     writeExportArtifacts();
-    console.log('[build] 打包完成 → dist/esm/（仅 exports 的 3 个入口）');
+    console.log('[build] 打包完成 → dist/esm/');
   }
 }
 
