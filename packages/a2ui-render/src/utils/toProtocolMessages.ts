@@ -1,6 +1,7 @@
 import { ExpressionParser } from './v09ExpressionParserLite';
 import type { A2UIProtocolVersion } from '../compat/litRuntime';
 import type { A2UIComponent, A2UIMessage } from '../components/BaseRenderer/types';
+import { A2UI_PRESET_COMPONENT_TYPES } from '@boteai/a2ui-comp-preset';
 
 /** 与官方 Playground 一致：裸字符串里的 `${...}` 需经 formatString 才参与数据绑定 */
 const v09InterpolationParser = new ExpressionParser();
@@ -223,6 +224,7 @@ const BASIC_CATALOG_OFFICIAL_COMPONENT_TYPES = new Set([
   'Slider',
   'DateTimeInput',
 ]);
+const PRESET_COMPONENT_TYPES = new Set(A2UI_PRESET_COMPONENT_TYPES);
 
 function collectComponentTypeNamesFromItem(item: unknown, into: Set<string>): void {
   if (!item || typeof item !== 'object') return;
@@ -265,6 +267,7 @@ export function pickCustomComponents(messages: unknown[], customComponentNames?:
   collectComponentTypeNamesFromMessages(messages, found);
   return Array.from(found)
     .filter((name) => !BASIC_CATALOG_OFFICIAL_COMPONENT_TYPES.has(name))
+    .filter((name) => !PRESET_COMPONENT_TYPES.has(name))
     .filter((name) => !customComponentNames?.includes(name))
     .sort();
 }

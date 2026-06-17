@@ -53,6 +53,7 @@
     "react-dom": "^17.x"
   },
   "dependencies": {
+    "@boteai/a2ui-comp-preset": "^0.0.1-beta.4",
     "@a2ui/lit": "^0.9.3",
     "@a2ui/markdown-it": "^0.0.3",
     "@a2ui/web_core": "^0.9.2",
