@@ -58,3 +58,75 @@ export function isMessagesAppendOnly(prev: unknown[] | undefined | null, next: u
   }
   return true;
 }
+
+const IN_PLACE_PATCH_MESSAGE_TYPES = new Set([
+  'updateComponents',
+  'surfaceUpdate',
+  'updateDataModel',
+  'dataModelUpdate',
+]);
+
+function getMessageTypeKey(msg: unknown): string | null {
+  if (msg == null || typeof msg !== 'object') return null;
+  const m = msg as Record<string, unknown>;
+  return [
+    'createSurface',
+    'beginRendering',
+    'updateComponents',
+    'surfaceUpdate',
+    'updateDataModel',
+    'dataModelUpdate',
+    'deleteSurface',
+  ].find((k) => m[k] != null) ?? null;
+}
+
+function isInPlacePatchMessageType(msg: unknown): boolean {
+  const typeKey = getMessageTypeKey(msg);
+  return typeKey != null && IN_PLACE_PATCH_MESSAGE_TYPES.has(typeKey);
+}
+
+/** 同长度 messages 下返回 fingerprint 变化的 index；长度不同返回 null */
+export function findChangedMessageIndices(
+  prev: unknown[] | undefined | null,
+  next: unknown[] | undefined | null,
+): number[] | null {
+  if (!Array.isArray(prev) || !Array.isArray(next)) return null;
+  if (prev.length === 0 || prev.length !== next.length) return null;
+  const indices: number[] = [];
+  for (let i = 0; i < prev.length; i += 1) {
+    if (stableMessageFingerprint(prev[i]) !== stableMessageFingerprint(next[i])) {
+      indices.push(i);
+    }
+  }
+  return indices;
+}
+
+/** 编辑器 in-place 改属性：同长度、createSurface 不变、仅 patch 类 message 变更 */
+export function isMessagesInPlacePatchable(
+  prev: unknown[] | undefined | null,
+  next: unknown[] | undefined | null,
+): boolean {
+  const changed = findChangedMessageIndices(prev, next);
+  if (!changed || changed.length === 0) return false;
+  if (changed.includes(0)) return false;
+  if (!Array.isArray(next)) return false;
+  return changed.every((i) => isInPlacePatchMessageType(next[i]));
+}
+
+/** patchable 时返回变更 index，否则 [] */
+export function getInPlacePatchIndices(
+  prev: unknown[] | undefined | null,
+  next: unknown[] | undefined | null,
+): number[] {
+  if (!isMessagesInPlacePatchable(prev, next)) return [];
+  return findChangedMessageIndices(prev, next) ?? [];
+}
+
+/** 增量更新后是否应保留 processor / DOM（append-only 或 in-place patch） */
+export function shouldKeepProcessorAlive(
+  built: unknown[] | undefined | null,
+  next: unknown[] | undefined | null,
+): boolean {
+  if (!Array.isArray(built) || !Array.isArray(next)) return false;
+  return isMessagesAppendOnly(built, next) || isMessagesInPlacePatchable(built, next);
+}
