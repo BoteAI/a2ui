@@ -6,6 +6,8 @@ export const SELECT_PREFIX = 'preset-select';
 
 export type SelectWidgetMode = 'single' | 'multiple';
 
+export type LabelLayout = 'horizontal' | 'vertical';
+
 export type SelectWidgetProps = {
   /** 单选时为 string | undefined；多选时为 string[] */
   value?: string | string[];
@@ -15,6 +17,10 @@ export type SelectWidgetProps = {
   options?: SelectProps['options'];
   /** 选择模式 */
   mode?: SelectWidgetMode;
+  /** 标题文本 */
+  label?: string;
+  /** label 与下拉框布局 */
+  labelLayout?: LabelLayout;
   /** 占位文本 */
   placeholder?: string;
   /** 是否禁用 */
@@ -32,6 +38,8 @@ export function SelectWidget({
   onChange,
   options,
   mode = 'single',
+  label,
+  labelLayout = 'vertical',
   placeholder,
   disabled,
   showSearch,
@@ -53,11 +61,16 @@ export function SelectWidget({
     onChange?.(nextValue as string | string[] | undefined);
   };
 
-  const rootClass = [SELECT_PREFIX, className].filter(Boolean).join(' ');
+  const rootClass = [
+    SELECT_PREFIX,
+    `${SELECT_PREFIX}--${labelLayout}`,
+    className,
+  ].filter(Boolean).join(' ');
 
   return (
     <ConfigProvider getPopupContainer={getPopupContainer}>
       <div className={rootClass}>
+        {label ? <label className={`${SELECT_PREFIX}__label`}>{label}</label> : null}
         <Select
           className={`${SELECT_PREFIX}__select`}
           value={value as string | string[] | undefined}

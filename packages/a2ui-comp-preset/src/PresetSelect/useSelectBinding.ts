@@ -10,7 +10,7 @@ import {
 import type { z } from 'zod';
 import type { SelectProps } from 'antd';
 import { PresetSelectApi } from './api';
-import type { SelectWidgetMode, SelectWidgetProps } from './SelectWidget';
+import type { LabelLayout, SelectWidgetMode, SelectWidgetProps } from './SelectWidget';
 
 type ApiProps = z.infer<typeof PresetSelectApi.schema>;
 
@@ -64,19 +64,6 @@ function readValueFromEngine(host: A2UICustomElementHost, apiProps: ApiProps, mo
   return raw;
 }
 
-/** 派发变更 action */
-function dispatchSelectChange(host: A2UICustomElementHost, nextValue: string | string[] | undefined, mode: SelectWidgetMode) {
-  const serialized = Array.isArray(nextValue) ? joinMultiValue(nextValue) : nextValue ?? '';
-  dispatchA2UIAction(host, {
-    name: 'preset_select_change',
-    context: {
-      source: 'PresetSelect',
-      value: serialized,
-      mode,
-    },
-  });
-}
-
 /** 将 A2UI host 与协议 props 转为 SelectWidget 受控组件 props */
 export function useSelectBinding(host: A2UICustomElementHost, apiProps: ApiProps): SelectWidgetProps {
   const mode: SelectWidgetMode = apiProps.mode === 'multiple' ? 'multiple' : 'single';
@@ -91,6 +78,14 @@ export function useSelectBinding(host: A2UICustomElementHost, apiProps: ApiProps
     () => parseOptions(resolveBoundValueRaw(host, apiProps.options)),
     [host, apiProps.options],
   );
+
+  const label = useMemo(() => {
+    if (apiProps.label == null) return undefined;
+    const resolved = resolveBoundValue(host, apiProps.label);
+    return resolved || undefined;
+  }, [host, apiProps.label]);
+
+  const labelLayout: LabelLayout = apiProps.labelLayout === 'horizontal' ? 'horizontal' : 'vertical';
 
   const [value, setValue] = useState<string | string[] | undefined>(fromEngine);
 
@@ -108,9 +103,6 @@ export function useSelectBinding(host: A2UICustomElementHost, apiProps: ApiProps
 
       // 派发声明式 action（协议里配置了 action 字段时生效）
       dispatchDeclaredAction(host);
-
-      // 同时派发自定义 action 通知业务层
-      dispatchSelectChange(host, nextValue, mode);
     },
     [host, apiProps.value, mode],
   );
@@ -120,6 +112,8 @@ export function useSelectBinding(host: A2UICustomElementHost, apiProps: ApiProps
     onChange,
     options,
     mode,
+    label,
+    labelLayout,
     disabled: Boolean(apiProps.disabled),
     placeholder: readLiteralString(apiProps.placeholder, mode === 'multiple' ? '请选择' : '请选择'),
     showSearch: Boolean(apiProps.showSearch),

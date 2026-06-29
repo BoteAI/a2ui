@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Card, Radio, Input, Switch, Divider, Typography, Space, Alert, Form } from 'antd';
-import { SelectWidget, type SelectWidgetMode } from './SelectWidget';
+import { SelectWidget, type LabelLayout, type SelectWidgetMode } from './SelectWidget';
 import type { SelectProps } from 'antd';
 
 const { Text, Title } = Typography;
@@ -20,6 +20,8 @@ const DEFAULT_OPTIONS_JSON = JSON.stringify(
 
 export default function PresetSelectDebug() {
   const [mode, setMode] = useState<SelectWidgetMode>('single');
+  const [label, setLabel] = useState('状态');
+  const [labelLayout, setLabelLayout] = useState<LabelLayout>('vertical');
   const [optionsJson, setOptionsJson] = useState(DEFAULT_OPTIONS_JSON);
   const [placeholder, setPlaceholder] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -88,6 +90,17 @@ export default function PresetSelectDebug() {
             <Form.Item label="placeholder">
               <Input placeholder="输入占位文本" value={placeholder} onChange={e => setPlaceholder(e.target.value)} style={{ width: 200 }} />
             </Form.Item>
+
+            <Form.Item label="label">
+              <Input placeholder="输入标题" value={label} onChange={e => setLabel(e.target.value)} style={{ width: 200 }} />
+            </Form.Item>
+
+            <Form.Item label="labelLayout">
+              <Radio.Group value={labelLayout} onChange={e => setLabelLayout(e.target.value)}>
+                <Radio.Button value="horizontal">horizontal</Radio.Button>
+                <Radio.Button value="vertical">vertical</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
           </Form>
 
           <Divider style={{ margin: '16px 0' }} />
@@ -107,6 +120,8 @@ export default function PresetSelectDebug() {
         <Card title="组件渲染区" size="small">
           <SelectWidget
             mode={mode}
+            label={label || undefined}
+            labelLayout={labelLayout}
             value={value}
             onChange={handleChange}
             options={parsedOptions}
