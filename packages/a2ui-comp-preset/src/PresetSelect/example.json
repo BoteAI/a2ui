@@ -1,6 +1,8 @@
 {
   "component": "PresetSelect",
   "id": "status-select",
+  "label": "状态",
+  "labelLayout": "vertical",
   "value": { "path": "/data/status" },
   "options": "[{\"label\":\"启用\",\"value\":\"active\"},{\"label\":\"禁用\",\"value\":\"inactive\"}]",
   "mode": "single",

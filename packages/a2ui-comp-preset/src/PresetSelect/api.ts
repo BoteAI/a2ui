@@ -10,6 +10,10 @@ export const PresetSelectApi = defineComponentApi({
     options: DynString.optional(),
     /** 模式：single 单选 | multiple 多选 */
     mode: z.enum(['single', 'multiple']).optional(),
+    /** 标题文本，支持 path 绑定 */
+    label: DynString.optional(),
+    /** label 与下拉框布局：horizontal 水平 | vertical 垂直，默认 vertical */
+    labelLayout: z.enum(['horizontal', 'vertical']).default('vertical').optional(),
     /** 占位文本 */
     placeholder: DynString.optional(),
     /** 是否禁用 */
