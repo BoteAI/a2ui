@@ -4,7 +4,7 @@ import { loadLitRuntime, normalizeProtocolVersion, type A2UIProtocolVersion, typ
 import type { A2UIComponent, A2UICustomComponentRegistry, A2UIMessage } from './types';
 import { useResponsive } from '../../utils/responsive';
 import { componentsToProtocolMessages, normalizeSurfaceId, normalizeToLitProtocolMessages } from '../../utils/toProtocolMessages';
-import { computeMessagesDigest, isMessagesAppendOnly } from '../../utils/messagesDigest';
+import { computeMessagesDigest, isMessagesAppendOnly, getInPlacePatchIndices, isMessagesInPlacePatchable, shouldKeepProcessorAlive } from '../../utils/messagesDigest';
 import { mergeLitActionPayload } from '../../utils/litActionMapping';
 import './index.less';
 import type { A2UIThemePreset } from './a2uiThemePresets';
@@ -317,6 +317,8 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
   const processorRef = useRef<any>(null);
   const lastFailedInputKeyRef = useRef<string | null>(null);
   const builtMessagesRef = useRef<unknown[] | null>(null);
+  /** processor 实际消费过的 sanitized 快照，in-place patch 须与其 diff */
+  const builtSanitizedRef = useRef<A2UIMessage[] | null>(null);
   const lastProcessedCountRef = useRef(0);
   const messagesRef = useRef(messages);
   messagesRef.current = messages;
@@ -480,11 +482,12 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
     setLitParseError(null);
 
     let cancelled = false;
+    const currentMessages = messagesRef.current;
     let renderMessages: A2UIMessage[] = [];
-    if (Array.isArray(messages) && messages.length > 0) {
+    if (Array.isArray(currentMessages) && currentMessages.length > 0) {
       try {
         renderMessages = normalizeToLitProtocolMessages(
-          messages,
+          currentMessages,
           normalizeProtocolVersion(protocolVersion),
         ) as A2UIMessage[];
       } catch (err) {
@@ -494,7 +497,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
           title: 'A2UI 消息协议不匹配',
           message: f.message,
           detail: f.detail,
-          debugMessages: messages,
+          debugMessages: currentMessages,
         });
         processorRef.current = null;
         return undefined;
@@ -514,7 +517,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
         title: 'A2UI 解析失败',
         message: '没有可渲染的消息：请检查 messages 或 components 是否为空。',
         debugMessages: {
-          messages,
+          messages: currentMessages,
           components,
           dataModel,
           rootComponentId,
@@ -540,7 +543,9 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
       return undefined;
     }
 
-    const rawMessagesSnapshot = Array.isArray(messages) && messages.length > 0 ? messages : null;
+    const rawMessagesSnapshot = Array.isArray(currentMessages) && currentMessages.length > 0
+      ? currentMessages
+      : null;
     const existingSurfaceEl = host.querySelector('a2ui-surface') as HTMLElement | null;
     const tryIncremental =
       rawMessagesSnapshot != null
@@ -574,7 +579,9 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
           if (selectedComponentIdRef.current !== undefined) {
             syncEditorSelectionHighlight(existingSurfaceEl, selectedComponentIdRef.current);
           }
+          requestA2uiSurfaceUpdate(existingSurfaceEl);
           builtMessagesRef.current = rawMessagesSnapshot;
+          builtSanitizedRef.current = cloneSanitizedMessages(sanitized);
           lastProcessedCountRef.current = sanitized.length;
           lastFailedInputKeyRef.current = null;
           return () => {
@@ -582,13 +589,14 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
             const next = messagesRef.current;
             const keepAlive =
               Array.isArray(next)
-              && isMessagesAppendOnly(builtMessagesRef.current, next)
+              && shouldKeepProcessorAlive(builtMessagesRef.current, next)
               && processorRef.current
               && hostRef.current?.querySelector('a2ui-surface');
             if (!keepAlive) {
               processorRef.current?.clearSurfaces();
               processorRef.current = null;
               builtMessagesRef.current = null;
+              builtSanitizedRef.current = null;
               lastProcessedCountRef.current = 0;
             }
           };
@@ -596,6 +604,77 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
       } catch (incrErr) {
         // eslint-disable-next-line no-console
         console.warn('[A2UI Lit] incremental processMessages failed, full rebuild', incrErr);
+      }
+    }
+
+    const tryInPlacePatch =
+      rawMessagesSnapshot != null
+      && builtMessagesRef.current != null
+      && builtSanitizedRef.current != null
+      && isMessagesInPlacePatchable(builtMessagesRef.current, rawMessagesSnapshot)
+      && processorRef.current != null
+      && existingSurfaceEl != null
+      && lastProcessedCountRef.current === sanitized.length
+      && getInPlacePatchIndices(builtSanitizedRef.current, sanitized).length > 0;
+
+    if (tryInPlacePatch) {
+      try {
+        registerA2UICustomComponents(mergedCustomComponents, litRuntime.componentRegistry);
+        const processor = processorRef.current;
+        // 仅 dispatch 变更的 patch 类 message；基线与 processor 对齐为 sanitized diff。
+        // 重放 createSurface 会在 v0.9 上抛「Surface already exists」并全量重建。
+        const patchIndices = getInPlacePatchIndices(builtSanitizedRef.current, sanitized);
+        const patchMessages = cloneSanitizedMessages(
+          patchIndices.map((i) => sanitized[i]),
+        );
+        if (patchMessages.length === 0) {
+          throw new Error('in-place patch: no changed messages');
+        }
+        processor.processMessages(patchMessages as Parameters<typeof processor.processMessages>[0]);
+        if (cancelled) {
+          return undefined;
+        }
+        const surface = processor.getSurfaces().get(surfaceId);
+        if (surface) {
+          (existingSurfaceEl as any).surface = surface;
+          if (protocolVersion !== '0.9') {
+            (existingSurfaceEl as any).processor = processor;
+          }
+          nudgePatchedComponentModels(surface, patchMessages);
+          applyCssVars(existingSurfaceEl, mergedStyleVars);
+          applySurfaceRuntimeExtras(
+            existingSurfaceEl,
+            injectAntdStylesInShadow,
+            mergedThemePresetCssRef.current,
+          );
+          if (selectedComponentIdRef.current !== undefined) {
+            syncEditorSelectionHighlight(existingSurfaceEl, selectedComponentIdRef.current);
+          }
+          refreshLitSurfaceAfterModelPatch(existingSurfaceEl, surface);
+          builtMessagesRef.current = rawMessagesSnapshot;
+          builtSanitizedRef.current = cloneSanitizedMessages(sanitized);
+          lastProcessedCountRef.current = sanitized.length;
+          lastFailedInputKeyRef.current = null;
+          return () => {
+            cancelled = true;
+            const next = messagesRef.current;
+            const keepAlive =
+              Array.isArray(next)
+              && shouldKeepProcessorAlive(builtMessagesRef.current, next)
+              && processorRef.current
+              && hostRef.current?.querySelector('a2ui-surface');
+            if (!keepAlive) {
+              processorRef.current?.clearSurfaces();
+              processorRef.current = null;
+              builtMessagesRef.current = null;
+              builtSanitizedRef.current = null;
+              lastProcessedCountRef.current = 0;
+            }
+          };
+        }
+      } catch (patchErr) {
+        // eslint-disable-next-line no-console
+        console.warn('[A2UI Lit] in-place patch processMessages failed, full rebuild', patchErr);
       }
     }
 
@@ -614,6 +693,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
         console.warn('[A2UI Lit] surface not found after processMessages', surfaceId);
         lastFailedInputKeyRef.current = renderInputKey;
         builtMessagesRef.current = null;
+        builtSanitizedRef.current = null;
         lastProcessedCountRef.current = 0;
         if (!silentOnErrorRef.current) {
           setLitParseError({
@@ -667,6 +747,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
       }
       const removeMcDismiss = attachMultipleChoiceDropdownDismiss(el);
       builtMessagesRef.current = rawMessagesSnapshot;
+      builtSanitizedRef.current = cloneSanitizedMessages(sanitized);
       lastProcessedCountRef.current = sanitized.length;
       lastFailedInputKeyRef.current = null;
 
@@ -675,7 +756,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
         const next = messagesRef.current;
         const keepAlive =
           Array.isArray(next)
-          && isMessagesAppendOnly(builtMessagesRef.current, next)
+          && shouldKeepProcessorAlive(builtMessagesRef.current, next)
           && processorRef.current
           && hostRef.current?.querySelector('a2ui-surface');
         if (!keepAlive) {
@@ -686,6 +767,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
           processor.clearSurfaces();
           processorRef.current = null;
           builtMessagesRef.current = null;
+          builtSanitizedRef.current = null;
           lastProcessedCountRef.current = 0;
           host.innerHTML = '';
         }
@@ -709,6 +791,7 @@ const LitSurfaceHost: React.FC<LitSurfaceHostProps> = ({
       }
       processorRef.current = null;
       builtMessagesRef.current = null;
+      builtSanitizedRef.current = null;
       lastProcessedCountRef.current = 0;
       return undefined;
     }
@@ -1160,4 +1243,70 @@ function applySurfaceRuntimeExtras(
   syncThemePresetSheetToShadowTree(surfaceEl, themePresetCss);
   syncAntdSheetToShadowTree(surfaceEl, injectAntdStyles);
   attachA2uiTextfieldEnterGuardsInTree(surfaceEl);
+}
+
+/** 深拷贝 sanitized 快照，避免与 processor 共享引用导致 diff 失真 */
+function cloneSanitizedMessages(messages: A2UIMessage[]): A2UIMessage[] {
+  return JSON.parse(JSON.stringify(messages)) as A2UIMessage[];
+}
+
+type LitSurfaceModel = {
+  componentsModel?: {
+    get: (id: string) => { properties?: Record<string, unknown> } | undefined;
+  };
+};
+
+/** 将 patch message 中的属性再次写入 ComponentModel，并触发 onUpdated */
+function nudgePatchedComponentModels(surface: unknown, patchMessages: A2UIMessage[]): void {
+  const model = surface as LitSurfaceModel;
+  const get = model?.componentsModel?.get?.bind(model.componentsModel);
+  if (!get) return;
+  for (const msg of patchMessages) {
+    const payload = (msg as { updateComponents?: { components?: Array<Record<string, unknown>> } }).updateComponents;
+    const comps = payload?.components;
+    if (!Array.isArray(comps)) continue;
+    for (const comp of comps) {
+      const id = comp?.id;
+      if (typeof id !== 'string' || !id) continue;
+      const componentModel = get(id) as { properties?: Record<string, unknown> } | undefined;
+      if (!componentModel) continue;
+      const { id: _id, component: _type, ...properties } = comp;
+      (componentModel as { properties: Record<string, unknown> }).properties = {
+        ...properties,
+      };
+    }
+  }
+}
+
+function requestA2uiSurfaceSubtreeUpdate(surfaceEl: HTMLElement): void {
+  const visit = (parent: ParentNode) => {
+    parent.querySelectorAll('*').forEach((node) => {
+      const lit = node as HTMLElement & { requestUpdate?: () => void };
+      if (typeof lit.requestUpdate === 'function') {
+        lit.requestUpdate();
+      }
+      if (node instanceof Element && node.shadowRoot) {
+        visit(node.shadowRoot);
+      }
+    });
+  };
+  requestA2uiSurfaceUpdate(surfaceEl);
+  const sr = surfaceEl.shadowRoot;
+  if (sr) visit(sr);
+}
+
+/** patch 后 surface 引用通常不变，重绑并刷新整棵 Shadow 树 */
+function refreshLitSurfaceAfterModelPatch(surfaceEl: HTMLElement, surface: unknown): void {
+  const el = surfaceEl as HTMLElement & { surface?: unknown };
+  el.surface = undefined;
+  el.surface = surface;
+  requestA2uiSurfaceSubtreeUpdate(surfaceEl);
+}
+
+/** in-place patch 后 surface 引用不变，须显式触发 Lit 重绘 */
+function requestA2uiSurfaceUpdate(surfaceEl: HTMLElement): void {
+  const el = surfaceEl as HTMLElement & { requestUpdate?: () => void };
+  if (typeof el.requestUpdate === 'function') {
+    el.requestUpdate();
+  }
 }
