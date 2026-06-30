@@ -1,6 +1,6 @@
 {
   "name": "@boteai/a2ui-comp-preset",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "博特 A2UI 内置 Preset 组件集",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
@@ -46,7 +46,7 @@
     "react-dom": "^17.x"
   },
   "dependencies": {
-    "@boteai/a2ui-custom-kit": "^0.0.1",
+    "@boteai/a2ui-custom-kit": "^0.0.2",
     "antd": "4.24.14",
     "recharts": "2",
     "zod": "^3.25.76"
@@ -60,5 +60,5 @@
     "react": "17.x",
     "react-dom": "17.x"
   },
-  "gitHead": "850b277a031c2e23fe758810a8da75001ec5c491"
+  "gitHead": "a6be7ae9790122776c47636070458c6f18f885ab"
 }
